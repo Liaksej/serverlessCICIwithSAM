@@ -2,11 +2,11 @@
 <!DOCTYPE instance-profile
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
-<instance-profile id="hi"
-                 name="Help Instance"
+<instance-profile id="scws"
+                 name="Serverless CI/CD with SAM"
                  start-page="Default-topic.md">
 
-    <toc-element topic="Introduction.md"/>
+    <toc-element topic="1. Introduction.md"/>
     <toc-element topic="Предварительные-требования.md"/>
     <toc-element topic="Настройка-проекта-AWS-SAM.md"/>
     <toc-element topic="Создание-пайплайна-CI-CD.md"/>
