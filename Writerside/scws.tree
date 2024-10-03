@@ -6,7 +6,7 @@
                  name="Serverless CI/CD with SAM"
                  start-page="Default-topic.md">
 
-    <toc-element topic="1. Introduction.md"/>
+    <toc-element topic="1-Introduction.md"/>
     <toc-element topic="Предварительные-требования.md"/>
     <toc-element topic="Настройка-проекта-AWS-SAM.md"/>
     <toc-element topic="Создание-пайплайна-CI-CD.md"/>
