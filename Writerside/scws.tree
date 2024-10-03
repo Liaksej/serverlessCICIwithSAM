@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="hi"
+                 name="Help Instance"
+                 start-page="Default-topic.md">
+
+    <toc-element topic="Introduction.md"/>
+    <toc-element topic="Предварительные-требования.md"/>
+    <toc-element topic="Настройка-проекта-AWS-SAM.md"/>
+    <toc-element topic="Создание-пайплайна-CI-CD.md"/>
+    <toc-element topic="5-Определение-пайплайна-в-SAM.md"/>
+    <toc-element topic="6-Настройка-CI-CD-пайплайна.md"/>
+    <toc-element topic="7-Запуск-и-тестирование-пайплайна.md"/>
+    <toc-element topic="8-Управление-и-мониторинг.md"/>
+    <toc-element topic="9-Лучшие-практики-и-оптимизация.md"/>
+    <toc-element topic="10-Заключение.md"/>
+    <toc-element topic="11-Приложения.md"/>
+    <toc-element topic="Default-topic.md"/>
+</instance-profile>

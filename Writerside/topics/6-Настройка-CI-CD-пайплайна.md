@@ -1,0 +1,3 @@
+# 6. Настройка CI/CD пайплайна
+
+Start typing here...
