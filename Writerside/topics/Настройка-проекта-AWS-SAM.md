@@ -1,28 +1,23 @@
-# 3. Настройка проекта AWS SAM
+# 3. Configuración del proyecto AWS SAM
 
-### 3.1. Создание нового проекта SAM
-The AWS Serverless Application Model (AWS SAM) is an open-source framework that developers use to build production-grade 
-serverless applications on AWS.
+### 3.1. Creación de un nuevo proyecto SAM
+El AWS Serverless Application Model (AWS SAM) es un marco de trabajo de código abierto que los desarrolladores utilizan para construir aplicaciones serverless de calidad de producción en AWS.
 
-A serverless application is a combination of Lambda functions, event sources, and other resources that work together to 
-perform tasks. But a serverless application is more than just a Lambda function—it can include additional resources such 
-as APIs, databases, and event source mappings.
+Una aplicación sin servidor es una combinación de funciones Lambda, fuentes de eventos y otros recursos que trabajan juntos para realizar tareas. Pero una aplicación sin servidor es más que solo una función Lambda, puede incluir recursos adicionales como APIs, bases de datos y asignaciones de fuentes de eventos.
 
-In this chapter, you will learn how to quickly scaffold a SAM application and understand how it is structured.
+En este capítulo, aprenderás cómo crear rápidamente una aplicación SAM y comprender cómo está estructurada.
 
-#### Initialize project
+#### Inicializar proyecto
 
-AWS SAM provides you with a command line tool, the AWS SAM CLI, which makes it easy for you to create and manage 
-serverless applications. In particular, scaffolding a new project becomes easier by creating the initial skeleton of an 
-application from which you can continue building your project.
+AWS SAM te proporciona una herramienta de línea de comandos, el AWS SAM CLI, que te facilita la creación y gestión de aplicaciones sin servidor. En particular, la creación de un nuevo proyecto se simplifica al crear el esqueleto inicial de una aplicación a partir del cual puedes seguir desarrollando tu proyecto.
 
-Run the following command to scaffold a new project:
+Ejecuta el siguiente comando para generar un nuevo proyecto:
 
 ```shell
 sam init
 ```
 
-In the wizard, select AWS QuickStart Templates and Hello World Example. Do not use the shortcut to use the latest Python version.
+En el asistente, selecciona Plantillas de inicio rápido de AWS y Ejemplo de Hola Mundo. No utilices el atajo para usar la última versión de Python.
 
 ```
 Choose an AWS Quick Start application template
@@ -47,7 +42,7 @@ Template: 1
 Use the most popular runtime and package type? (Python and zip) [y/N]: n
 ```
 
-Next, select your preferred runtime and version. Make sure to select the correct version as shown below.
+A continuación, selecciona tu tiempo de ejecución preferido y versión. Asegúrate de seleccionar la versión correcta como se muestra a continuación.
 
 ```
 Which runtime would you like to use?
@@ -80,7 +75,7 @@ Which runtime would you like to use?
 nodejs20.x
 ```
 
-Select Zip as the package type and leave sam-app as the Project name.
+Selecciona Zip como tipo de paquete y deja sam-app como nombre del Proyecto.
 
 ```
 What package type would you like to use?
@@ -103,19 +98,12 @@ For more info, please view https://docs.aws.amazon.com/AmazonCloudWatch/latest/m
 
 Project name [sam-app]:
 ```
-Project should now be initialized
+El proyecto debe estar inicializado ahora
 
-You should see a new folder sam-app created with a basic Hello World scaffolding.
+Deberías ver una nueva carpeta sam-app creada con un andamiaje básico de Hola Mundo.
+
+![pthoto_3.1.1.png](pthoto_3.1.1.png)
 
 
 >If you are interested in learning more about initializing SAM projects, 
 you can find the full reference for the sam init command in the [SAM CLI reference](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-init.html).
-
-
-### 3.2. Описание файлов и структуры проекта (template.yaml, app.py и т.д.) 
-
-### 3.3. Описание принципов разработки Lambda на TypeScript с использованием esbuild
-
-### 3.4. Локальное тестирование функций Lambda 
-
-### 3.5. Запуск локального API

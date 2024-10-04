@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/writerside/1.0/redirection-rules.dtd">
+<rules>
+    <!-- format is as follows
+    <rule id="<unique id>">
+        <accepts>page.html</accepts>
+    </rule>
+    -->
+    <rule id="7f8e7301">
+        <description>Created after removal of "Descripción de los principios de desarrollo Lambda en TypeScript
+            utilizando esbuild" from Serverless CI/CD with SAM
+        </description>
+        <accepts>Descripción-de-los-principios-de-desarrollo-Lambda-en-TypeScript-utilizando-esbuild.html</accepts>
+    </rule>
+</rules>

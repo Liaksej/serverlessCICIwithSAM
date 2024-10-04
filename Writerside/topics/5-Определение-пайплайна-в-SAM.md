@@ -1,7 +1,7 @@
-# 5. Определение пайплайна в SAM
+# 5. Definición de pipeline en SAM
 
-### 5.1. Обзор файла samconfig.toml 
+### 5.1. Resumen del archivo samconfig.toml
 
-### 5.2. Настройка template.yaml для пайплайна (определение ресурсов, политик и артефактов) 
+### 5.2. Configuración de template.yaml para el *pipeline* (definición de recursos, políticas y artefactos)
 
-### 5.3. Примеры файлов конфигурации
+### 5.3. Ejemplos de archivos de configuración

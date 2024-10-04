@@ -4,12 +4,18 @@
 
 <instance-profile id="scws"
                  name="Serverless CI/CD with SAM"
-                 start-page="Default-topic.md">
+                 start-page="1-Introduction.md">
 
     <toc-element topic="1-Introduction.md"/>
     <toc-element topic="Предварительные-требования.md"/>
-    <toc-element topic="Настройка-проекта-AWS-SAM.md"/>
+    <toc-element topic="Настройка-проекта-AWS-SAM.md">
+        <toc-element topic="Descripción-de-archivos-y-estructura-del-proyecto.md"/>
+        <toc-element topic="Descripción-de-los-principios-de-desarrollo-Lambda-en-TypeScript-utilizando-esbuild.md"/>
+        <toc-element topic="Prueba-local-de-funciones-Lambda.md"/>
+        <toc-element topic="Iniciar-API-local.md"/>
+    </toc-element>
     <toc-element topic="Создание-пайплайна-CI-CD.md"/>
+    <toc-element topic="What-is-the-good-pipeline-means.md"/>
     <toc-element topic="5-Определение-пайплайна-в-SAM.md"/>
     <toc-element topic="6-Настройка-CI-CD-пайплайна.md"/>
     <toc-element topic="7-Запуск-и-тестирование-пайплайна.md"/>

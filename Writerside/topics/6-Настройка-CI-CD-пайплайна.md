@@ -1,9 +1,9 @@
-# 6. Настройка CI/CD пайплайна
+# Configuración del pipeline de CI/CD
 
-### 6.1. Создание IAM ролей и политик 
+### 6.1. Creación de roles y políticas IAM 
 
-### 6.2. Настройка этапов пайплайна (Build, Test, Deploy) 
+### 6.2. Configuración de las etapas del pipeline (Build, Test, Deploy) 
 
-### 6.3. Написание билд-скриптов (buildspec.yml) 
+### 6.3. Escritura de scripts de compilación (buildspec.yml) 
 
-### 6.4. Пример файла конфигурации для различных инструментов CI/CD
+### 6.4. Ejemplo de archivo de configuración para varias herramientas CI/CD
