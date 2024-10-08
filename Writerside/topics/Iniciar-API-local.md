@@ -1,4 +1,4 @@
-# 3.5 Deploy Manually with SAM
+# Deploy Manually with SAM
 
 Before we start building a fully automated CI/CD pipeline, you will learn how to build, package, and deploy a serverless 
 application using the AWS SAM CLI.

@@ -1,3 +1,0 @@
-# 3.3 Descripción de los principios de desarrollo Lambda en TypeScript utilizando esbuild
-
-Start typing here...

@@ -12,4 +12,50 @@
         </description>
         <accepts>Descripción-de-los-principios-de-desarrollo-Lambda-en-TypeScript-utilizando-esbuild.html</accepts>
     </rule>
+    <rule id="1bdb5c0">
+        <description>
+            <![CDATA[Created after removal of "<11-Приложения.md>" from Serverless CI/CD with SAM]]></description>
+        <accepts>11-Приложения.html</accepts>
+    </rule>
+    <rule id="7751cbf4">
+        <description>Created after removal of "9. Mejores prácticas y optimización" from Serverless CI/CD with SAM
+        </description>
+        <accepts>9-Лучшие-практики-и-оптимизация.html</accepts>
+    </rule>
+    <rule id="6e51e27">
+        <description>Created after removal of "8. Gestión y monitoreo" from Serverless CI/CD with SAM</description>
+        <accepts>8-Управление-и-мониторинг.html</accepts>
+    </rule>
+    <rule id="2f83b427">
+        <description>Created after removal of "7. Inicio y prueba de pipeline" from Serverless CI/CD with SAM
+        </description>
+        <accepts>7-Запуск-и-тестирование-пайплайна.html</accepts>
+    </rule>
+    <rule id="8b66a61">
+        <description>Created after removal of "Configuración del pipeline de CI/CD" from Serverless CI/CD with SAM
+        </description>
+        <accepts>6-Настройка-CI-CD-пайплайна.html</accepts>
+    </rule>
+    <rule id="39793acc">
+        <description>Created after removal of "5. Definición de pipeline en SAM" from Serverless CI/CD with SAM
+        </description>
+        <accepts>5-Определение-пайплайна-в-SAM.html</accepts>
+    </rule>
+    <rule id="2cb15632">
+        <description>Created after removal of "3.2. Descripción de archivos y estructura del proyecto (template.yaml,
+            app.py y otros)" from Serverless CI/CD with SAM
+        </description>
+        <accepts>Descripción-de-archivos-y-estructura-del-proyecto.html</accepts>
+    </rule>
+    <rule id="1b56712d">
+        <description>Created after removal of "3.3 Descripción de los principios de desarrollo Lambda en TypeScript
+            utilizando esbuild" from Serverless CI/CD with SAM
+        </description>
+        <accepts>Descripción-de-los-principios-de-desarrollo-Lambda-en-TypeScript-utilizando-esbuild.html</accepts>
+    </rule>
+    <rule id="36a2293f">
+        <description>
+            <![CDATA[Created after removal of "<Canary-Linear-deployment-with-SAM.md>" from Serverless CI/CD with SAM]]></description>
+        <accepts>Canary-Linear-deployment-with-SAM.html</accepts>
+    </rule>
 </rules>

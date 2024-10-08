@@ -1,6 +1,6 @@
-# 1. Introducción
+# Propositos y objetidov
 
-### 1.1. Descripción del proyecto 
+### Descripción del proyecto 
 
 La configuración del ciclo CI/CD para aplicaciones serverless difiere de la configuración de ciclos similares para aplicaciones de servidor o sitios estáticos. La falta de infraestructura de servidor o contenedor bajo el control del usuario, propietario de las aplicaciones serverless, requiere la integración de herramientas de compilación y despliegue habituales con herramientas y técnicas específicas.
 
@@ -10,7 +10,7 @@ Como runtime para las funciones Lambda se utilizó Node.js 20.x, y como lenguaje
 
 La documentación será útil tanto para los profesionales de DevOps como para los desarrolladores y los operadores de sistemas, que trabajan con AWS.
 
-### 1.2. Objetivos de la documentación
+### Objetivos de la documentación
 
 * Obtener una comprensión del ciclo básico de CI/CD para aplicaciones sin servidor.
 * Evaluar qué capacidades tiene SAM y cómo estas capacidades ayudan a simplificar y acelerar el desarrollo de aplicaciones sin servidor en AWS.

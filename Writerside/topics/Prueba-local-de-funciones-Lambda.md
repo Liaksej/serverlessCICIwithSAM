@@ -1,4 +1,4 @@
-# 3.4 Prueba local de funciones Lambda
+# Prueba local de funciones Lambda
 
 Now that you have a SAM application. You will learn how to run it and test it locally using the AWS SAM CLI. 
 This is important because its part of the day to day development workflow. It helps you verify if the application is 

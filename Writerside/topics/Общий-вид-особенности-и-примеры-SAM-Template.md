@@ -1,4 +1,4 @@
-# 3.2. Descripción de archivos y estructura del proyecto (template.yaml, app.py y otros) 
+# Общий вид, особенности и примеры SAM Template
 
 The Hello World SAM project you just initialized creates a Lambda function and an API Gateway that exposes a /hello 
 resource. When called with an HTTP GET request, the API Gateway invokes the function which assumes an IAM execution 
@@ -146,6 +146,3 @@ Outputs:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt HelloWorldFunctionRole.Arn
 ```
-
-
-
