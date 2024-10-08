@@ -1,4 +1,4 @@
-# Практики с SAM Framework
+# Prácticas de trabajo con SAM
 
 * [Конфигурация проекта с SAM]()
 * [Общий вид, особенности и примеры SAM Template]()

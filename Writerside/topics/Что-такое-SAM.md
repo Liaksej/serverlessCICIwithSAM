@@ -1,40 +1,43 @@
-# Что такое SAM
+# Qué es SAM
 
 ## AWS SAM
 
-AWS SAM is an open source framework you can use to build your serverless applications. It provides you with a 
-shorthand syntax to express your functions, APIs, databases, and event source mappings.
+AWS SAM es un framework de código abierto que puedes usar para construir tus aplicaciones sin servidor. 
+Te proporciona una sintaxis abreviada para expresar las funciones, APIs, bases de datos y mapeos de fuentes de eventos.
 
-During your deployments, SAM then transforms and expands the SAM syntax into an AWS CloudFormation syntax. 
-CloudFormation can then provision your resources with reliable deployment capabilities, making the deployment of your 
-serverless application simpler.
+Durante las implementaciones, SAM luego transforma y amplía la sintaxis de SAM en una sintaxis de AWS CloudFormation. 
+CloudFormation puede entonces aprovisionar tus recursos con capacidades confiables de implementación, haciendo más 
+simple la implementación de los aplicación serverless.
 
-### SAM templates
+### Plantillas SAM
 
-AWS SAM templates are an extension of the AWS CloudFormation templates, with some additional components that make them 
-easier for you to work with. Some of these additional components include the following:
+Las plantillas de AWS SAM son una extensión de las plantillas de AWS CloudFormation, con algunos componentes adicionales 
+que las hacen más fáciles de usar. Algunos de estos componentes adicionales incluyen los siguientes:
 
-* Create AWS CloudFormation compatible templates using shorthand syntax.
-* Use infrastructure as code to define your Lambda functions, API Gateway APIs, serverless application from the AWS 
-Serverless Application Repository, and DynamoDB tables.
-* If any errors are detected while deploying your template, AWS CloudFormation will roll back the template and delete 
-any resources that were created, leaving your environment exactly as it was before the deployment.
+* Cree plantillas compatibles con AWS CloudFormation utilizando la sintaxis abreviada.
+* Utiliza infraestructura como código para definir tus funciones Lambda, APIs de Getaway API, 
+aplicación serverless desde el Repositorio de Aplicaciones Serverless de AWS y tablas de DynamoDB.
+* Si se detectan errores durante la implementación de su plantilla, AWS CloudFormation revertirá la plantilla y 
+eliminará cualquier recurso que se haya creado, dejando su entorno exactamente como estaba antes de la implementación.
 
-### Example of a SAM template
+### Ejemplo de una plantilla SAM
 
-AWS SAM requires the use of the transform directive and a resource block with a corresponding type. 
-The transform directive takes an entire template written in the AWS SAM syntax and transforms and expands it into a 
-compliant AWS CloudFormation template. You can also optionally include any resource in a SAM template.
+AWS SAM requiere el uso de la directiva transform y un bloque de recurso con un tipo correspondiente. 
+La directiva transform toma un template completo escrito en la sintaxis de AWS SAM y lo transforma y expande 
+en un template compatible de AWS CloudFormation. También puedes opcionalmente incluir cualquier recurso 
+en un template de SAM.
 
 ![image](https://explore.skillbuilder.aws/files/a/w/aws_prod1_docebosaas_com/1728054000/OkLFRSay1U8Sv7H0Idus2Q/tincan/675621_1654804371_p1g5509l8kdo9ri4lrh1vhpr5f4_zip/assets/76NnqtBLaO8PxNVq_j-e6BlWiBKpuO2jG.png)
 
-### Deploying SAM templates with the SAM CLI
+### Despliegue plantillas SAM con la SAM CLI
 
-This diagram summarizes the process of developing with AWS SAM. You begin by writing your Lambda function code and 
-defining all of your serverless resources inside an AWS SAM template. You can use the SAM CLI to emulate the Lambda 
-environment and perform local tests on your Lambda functions. After the code and templates are validated, you can then 
-use the SAM package command to create a deployment package, which is essentially a .zip file that SAM stores in Amazon S3. 
-After that, the SAM deploy command instructs AWS CloudFormation to deploy the .zip file to create resources inside of your AWS console.
+Este diagrama resume el proceso más simple de desarrollo con AWS SAM. Comienzas escribiendo el código de
+tu función Lambda y definiendo todos tus recursos sin servidor dentro de una plantilla de AWS SAM. Puedes usar 
+la CLI de SAM para emular el entorno Lambda y realizar pruebas locales en tus funciones Lambda. Después de que 
+el código y las plantillas sean validados, puedes utilizar el comando de paquete SAM para crear un paquete 
+de implementación, que es en esencia un archivo .zip que SAM guarda en Amazon S3. Después de eso, el comando 
+de implementación SAM instruye a AWS CloudFormation para implementar el archivo .zip y crear recursos dentro 
+de tu consola de AWS.
 
 ![image](https://explore.skillbuilder.aws/files/a/w/aws_prod1_docebosaas_com/1728054000/OkLFRSay1U8Sv7H0Idus2Q/tincan/675621_1654804371_p1g5509l8kdo9ri4lrh1vhpr5f4_zip/assets/FRRRFN5zNMSL3EE2_cxjqTIMYuVN7kQ_n.png)
 

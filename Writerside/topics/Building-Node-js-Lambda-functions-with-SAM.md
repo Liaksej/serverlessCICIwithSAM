@@ -1,6 +1,6 @@
 # Особенности настройки использования TypeScript в проектах с SAM
 
-To build and package TypeScript AWS Lambda functions, you can use the AWS SAM CLI with the esbuild JavaScript bundler. 
+To build and package TypeScript AWS Lambda functions, you can use the AWS SAM CLI with the **esbuild** JavaScript bundler. 
 The esbuild bundler supports Lambda functions that you write in TypeScript.
 
 To build a TypeScript Lambda function with esbuild, add a `Metadata` object to your `AWS:Serverless::Function` resource 

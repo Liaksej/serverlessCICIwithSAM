@@ -1,18 +1,18 @@
-# Общий вид, особенности и примеры SAM Template
+# Aspectos generales, características y ejemplos de Plantilla SAM
 
-The Hello World SAM project you just initialized creates a Lambda function and an API Gateway that exposes a /hello 
-resource. When called with an HTTP GET request, the API Gateway invokes the function which assumes an IAM execution 
-role with permissions to interact with other AWS resources, like a database, for example.
+El Hello World Example TypeScript que acabas de inicializar crea una función Lambda y una API Gateway que expone 
+un recurso /hello. Cuando se llama con una solicitud GET de HTTP, la API Gateway invoca la función que asume un rol
+de ejecución IAM con permisos para interactuar con otros recursos de AWS, como por ejemplo una base de datos.
 
 ![image_3-.png](image_3.2.1.png)
 
-### Explore the SAM template
+### Explora la plantilla SAM
 
-Let's take a moment to understand the structure of a SAM application by exploring the SAM template which represents 
-the architecture of your Serverless application. Go ahead and open the sam-app/template.yaml file.
+Tomémonos un momento para entender la estructura de una aplicación SAM explorando la plantilla SAM que representa 
+la arquitectura de tu aplicación sin servidor. Ve y abre el archivo `sam-app/template.yaml`.
 
-It should have a structure like the following. This is a Node application and your template.yaml will look slightly 
-different if using a different runtime.
+Debe tener una estructura como la siguiente. Esta es una aplicación Node y su template.yaml se verá ligeramente 
+diferente si se usa un runtime distinto.
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
@@ -31,9 +31,8 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello-world/
-      Handler: app.lambdaHandler
-      Runtime: nodejs16.x
+      Handler: hello-world/app.lambdaHandler
+      Runtime: nodejs20.x
       Architectures:
         - x86_64
       Events:
@@ -42,7 +41,23 @@ Resources:
           Properties:
             Path: /hello
             Method: get
-
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: ES2022
+        Sourcemap: true
+        KeepNames: true
+        Format: esm
+        SourcesContent: true
+        MainFields: module,main
+        TreeShaking: true
+        EntryPoints:
+          - hello-world/app.ts
+        External:
+          - '@aws-lambda-powertools/*'
+          - '@aws-sdk/*'
+            
 Outputs:
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
@@ -54,14 +69,14 @@ Outputs:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt HelloWorldFunctionRole.Arn
 ```
-You may notice that the syntax looks exactly like AWS CloudFormation, this is because SAM templates are an extension 
-of CloudFormation templates. That is, any resource that you can declare in CloudFormation, you can also declare in a 
-SAM template. Let's take a closer look at the components of the template.
+Puedes notar que la sintaxis se parece exactamente a AWS CloudFormation, esto se debe a que las plantillas SAM son 
+una extensión de las plantillas de CloudFormation. Es decir, **cualquier recurso que puedas declarar en CloudFormation, 
+también puedes declararlo en una plantilla SAM**. Vamos a analizar más de cerca los componentes de la plantilla.
 
-### Transform
+### Transformación
 
-Notice the transform line of the template highlighed below. This line tells CloudFormation that the template adheres to 
-the open source AWS Serverless Application Model [specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md):
+Observe la línea de transformación de la plantilla resaltada a continuación. Esta línea indica a CloudFormation que 
+la plantilla se adhiere al AWS SAM [specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md):
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
@@ -70,8 +85,9 @@ Transform: AWS::Serverless-2016-10-31
 
 ### Globals
 
-This section defines properties common to all your Serverless functions and APIs. In this case, it's specifying that 
-all functions in this project will have a default timeout of 3 seconds and default memory of 128 MB.
+Esta sección define propiedades comunes a todas sus **funciones serverless** y **APIs**. En este caso, especifica 
+que todas las funciones en este proyecto tendrán un tiempo de espera predeterminado de 3 segundos y una memoria 
+predeterminada de 128 MB.
 
 ```yaml
 Globals:
@@ -80,11 +96,11 @@ Globals:
     Memory : 128
 ```
 
-### Hello World Function
+### Función Hello World
 
-The following section creates a Lambda function with an IAM execution role. It also specifies that the code for this 
-Lambda function is located under a folder specified in the CodeUri key. The Handler key defines the file and function 
-name of the entrypoint.
+La siguiente sección crea una función Lambda con un rol de ejecución IAM. También especifica que el código de 
+esta función Lambda se encuentra en una carpeta especificada en la clave CodeUri. La clave Handler define el archivo 
+y nombre de la función del punto de entrada.
 
 ```yaml
 HelloWorldFunction:
@@ -100,14 +116,16 @@ HelloWorldFunction:
           Path: /hello
           Method: get
 ```
-Notice that the IAM role is not explicitly specified, this is because SAM will create a new one by default. 
-You can override this behavior and pass your own role by specifying the Role parameter. 
-For a complete list of the parameters you can specify for a Lambda function, check the SAM [reference](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction).
+Observa que el **IAM role** no está especificado explícitamente, esto se debe a que SAM creará uno nuevo por defecto.
+Puedes anular este comportamiento y pasar tu propio role especificando el parámetro Role. 
+Para obtener una lista completa de los parámetros que puede especificar para una función Lambda, consulte la página SAM 
+[referencia](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction).
 
-### Event Triggers
+### Desencadenadores de Eventos
 
-The Events section is part of the function definition. This section specifies the different events that will trigger 
-the Lambda function. In this case, we are specifying an HTTP GET request to an API Gateway with an endpoint of /hello.
+La sección de **Eventos** es parte de la definición de la función. Esta sección especifica los diferentes eventos que 
+desencadenarán la función Lambda. En este caso, estamos especificando una solicitud **GET** HTTP a una **Pasarela de API** 
+con un extremo de `/hello`.
 
 ```yaml
 HelloWorldFunction:
@@ -126,10 +144,10 @@ HelloWorldFunction:
 
 ### Outputs
 
-The Outputs section is optional and it declares output values that you can import into other CloudFormation stacks 
-(to create cross-stack references), or simply to view them on the CloudFormation console. In this case, we are making 
-the API Gateway endpoint URL, the Lambda function ARN, and the IAM Role ARN available as Outputs to make them easier 
-to find.
+La sección de **Salidas** es opcional y declara los valores de salida que puedes importar a otras pilas de CloudFormation 
+(para crear referencias entre pilas), o simplemente para verlos en la consola de CloudFormation. En este caso, 
+estamos haciendo disponibles como **Salidas** la URL del punto final de la Puerta de enlace de la API, el ARN de 
+la función Lambda, y el ARN del rol de IAM para facilitar su localización.
 
 ```yaml
 Outputs:
@@ -146,3 +164,8 @@ Outputs:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt HelloWorldFunctionRole.Arn
 ```
+
+## Recursos adicionales
+
+* [AWS SAM Developer Guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html)
+* [AWS SAM resources and properties](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-resources-and-properties.html)
