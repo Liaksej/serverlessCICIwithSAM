@@ -1,7 +1,7 @@
 # Despliegue manual con SAM
 
 Antes de comenzar a construir un flujo de trabajo de integración y entrega continua (CI/CD) completamente automatizado, 
-aprenderás cómo construir, empaquetar y implementar una aplicación sin servidor utilizando AWS SAM CLI.
+vamos a aprender cómo construir, empaquetar y implementar una aplicación sin servidor utilizando AWS SAM CLI.
 
 ![image_3.5.1.png](image_3.5.1.png)
 
@@ -9,46 +9,46 @@ Es importante aprender los fundamentos de cómo empaquetar e implementar una apl
 enseñe cómo automatizar implementaciones con un pipeline CI/CD. Aprender cómo realizar implementaciones manuales 
 también es útil para los desarrolladores que desean crear un stack personal no productivo.
 
-## Hablemos de artefactos
+## Artefactos
 
 Los **artefactos** se refieren a la salida de tu proceso de compilación en el contexto de CI/CD. Los artefactos suelen 
-ser en forma de un archivo zip/tar, imagen de contenedor o un binario, por ejemplo. Tomas estos artefactos y los 
-despliegas en tus diferentes entornos (es decir, Dev, Test, Prod). Para proyectos sin servidor, los artefactos zip 
-deben ser subidos a un cubo S3 para que el servicio Lambda los recoja. El SAM CLI se encarga de gestionar este 
+ser en forma de un archivo zip/tar, imagen de contenedor o un binario, por ejemplo. Puedes tomar estos artefactos y 
+desplegarlos en tus diferentes entornos (es decir, Dev, Test, Prod). Para proyectos _serverless_, los artefactos `.zip` 
+deben ser subidos a un bucket S3 para que el servicio Lambda los recoja. El SAM CLI se encarga de gestionar este 
 proceso de subida de artefactos a S3 y de hacer referencia a ellos en el momento del despliegue.
 
-### El archivo Zip
+### El archivo `.zip`
 
 El primer artefacto que se genera en un proyecto *serverless* es tu código de aplicación y las bibliotecas de soporte. 
-Por defecto, estos se comprimen en un archivo zip y se cargan en un cubo S3 por el SAM CLI durante la fase de 
+Por defecto, estos se comprimen en un archivo `.zip` y se cargan en un bucket S3 por el SAM CLI durante la fase de 
 empaquetado (más información sobre esto más adelante).
 
-### El Template empaquetado
+### Template empaquetado
 
 El segundo artefacto que SAM CLI genera durante la fase de empaquetado es la plantilla empaquetada. 
-Que es una copia de la template.yaml de tu proyecto, excepto que hace referencia a la ubicación del archivo zip 
+Que es una copia de la `template.yaml` de tu proyecto, excepto que hace referencia a la ubicación del archivo `.zip` 
 (primer artefacto) en el bucket de S3. La siguiente imagen muestra un ejemplo de una plantilla empaquetada.
 
 ![image_3.5.2.png](image_3.5.2.png)
 
-Fíjate en cómo el CodeUri hace referencia al archivo zip en un bucket de S3, en lugar de en un directorio local. 
+Fíjate en cómo el CodeUri hace referencia al archivo `.zip` en un bucket de S3, en lugar de en un directorio local. 
 De esta forma, AWS Lambda puede extraer tu código en el momento de la implementación.
 
-## Build de la app
+## Build de app
 
-Para construir un proyecto SAM, vamos a utilizar el comando sam build. Este comando itera a través de las funciones 
+Para construir un proyecto SAM, vamos a utilizar el comando `sam build`. Este comando itera a través de las funciones 
 en tu aplicación, buscando el archivo de manifiesto (`package.json`) que contenga dependencias, y automáticamente crea 
 los artefactos de despliegue.
 
-Desde la raíz de la carpeta sam-app, ejecuta el siguiente comando en la terminal:
+Desde la raíz de la carpeta `sam-app`, ejecuta el siguiente comando en la terminal:
 
 ```shell
-cd ~/environment/sam-app
+cd ~/sam-app
 sam build
 ```
 
 ```
-Building codeuri: /home/ec2-user/environment/sam-app/hello-world runtime: nodejs16.x metadata: {} architecture: x86_64 functions: ['HelloWorldFunction']
+Building codeuri: /home/ec2-user/sam-app/hello-world runtime: nodejs20.x metadata: {} architecture: x86_64 functions: ['HelloWorldFunction']
 Running NodejsNpmBuilder:NpmPack
 Running NodejsNpmBuilder:CopyNpmrc
 Running NodejsNpmBuilder:CopySource
@@ -71,30 +71,29 @@ Commands you can use next
 ### Build completada
 
 Cuando la compilación finaliza con éxito, verás un nuevo directorio creado en la raíz del proyecto llamado `.aws-sam`. 
-Es una carpeta oculta, así que si deseas verla en el IDE, **asegúrate de habilitar** `Mostrar archivos ocultos` 
-en Cloud9 para poder visualizarla.
+Es una carpeta oculta, así que si deseas verla en el IDE, **asegúrate de habilitar** `Mostrar archivos ocultos`.
 
 ![image_3.5.3.png](image_3.5.3.png)
 
 ### Explora la carpeta de construcción
 
-Tómese un momento para explorar el contenido de la carpeta de construcción. Note que las pruebas unitarias están 
+Tómete un momento para explorar el contenido de la carpeta de construcción. Nota que las pruebas unitarias están 
 automáticamente excluidas y las dependencias de terceros están incluidas. SAM se encarga de esto por nosotros.
 
 ![image_3.5.4.png](image_3.5.4.png)
 
 La carpeta de construcción incluye el archivo app.js como el punto de entrada para la aplicación Lambda, 
-el directorio node_modules con las dependencias, y el archivo package.json que declara las dependencias de la aplicación.
+el directorio `node_modules` con las dependencias, y el archivo `package.json` que declara las dependencias de la aplicación.
 
 ```
-admin:~/environment/node-sam-app $ ls -l .aws-sam/build/HelloWorldFunction/
+admin:~/node-sam-app $ ls -l .aws-sam/build/HelloWorldFunction/
 total 8
 -rw-r--r-- 1 ec2-user ec2-user 331 Oct 26  1985 app.js
 drwxrwxr-x 5 ec2-user ec2-user  57 Mar  9 22:35 node_modules
 -rw-r--r-- 1 ec2-user ec2-user 468 Oct 26  1985 package.json
 ```
 
-## Hacer deploy de la aplicación
+## Deploy de aplicación
 
 El comando `sam deploy` despliega tu aplicación lanzando una pila de CloudFormation. Este comando tiene un modo 
 interactivo guiado, que puedes habilitar especificando el parámetro `--guided`. Se recomienda desplegar en modo 
@@ -109,13 +108,12 @@ sam deploy --guided
 
 
 Este proceso te guiará a través de una serie de preguntas. Tus respuestas se guardarán en el archivo de configuración 
-al final, lo que acelerará despliegues futuros. Presionar la tecla Enter aceptará el valor predeterminado mostrado 
+al final, lo que acelerará despliegues futuros. Presionar la tecla `Enter` aceptará el valor predeterminado mostrado 
 entre corchetes para cada pregunta, por ejemplo `[sam-app]`. Las letras en MAYÚSCULAS son los valores predeterminados, 
 por ejemplo, presionar enter para `[y/N]` resultará en `No` por defecto.
 
-> **Autorización faltante**
-> Asegúrate de responder y a la pregunta sobre la autorización faltante: HelloWorldFunction puede que no tenga definida autorización,
-> ¿Esto está bien? [y/N]: y
+> **Autorización faltante**  
+> Asegúrate de responder y a la pregunta sobre la autorización faltante: `HelloWorldFunction may not have authorization defined, Is this okay? [y/N]: y`
 
 ```
 Configuring SAM deploy
@@ -181,14 +179,14 @@ curl -s https://01111gpgpg.execute-api.us-west-2.amazonaws.com/Prod/hello/
 El despliegue guiado hace pocas cosas por ti. Echemos un vistazo rápido a lo que sucedió bajo el capó durante 
 el despliegue guiado para entender mejor este proceso.
 
-1. Su codebase se empaqueta como un archivo zip.
+1. Tu codebase se empaqueta como un archivo `.zip`.
 2. SAM crea un bucket de S3 en tu cuenta, si este aún no existe.
-3. El archivo zip se ha subido al depósito S3.
-4. SAM ha creado el [packaged template](https://catalog.workshops.aws/complete-aws-sam/en-US/module-3-manual-deploy/10-bucket.md#the-packaged-template) que se refiere a una ubicación del archivo zip en S3.
-5. El template empaquetado también se ha subido al cubo S3.
-6. SAM inicia la implementación a través de los conjuntos de cambios de CloudFormation.
+3. El archivo `.zip` se ha subido al depósito S3.
+4. SAM ha creado el [packaged template](https://catalog.workshops.aws/complete-aws-sam/en-US/module-3-manual-deploy/10-bucket.md#the-packaged-template) que se refiere a una ubicación del archivo `.zip` en S3.
+5. El template empaquetado también se ha subido al bucket S3.
+6. SAM inicia el despegue a través de los conjuntos de cambios de CloudFormation.
 
-La primera vez que realices una implementación guiada, se creará un nuevo archivo 'samconfig.toml' en la raíz de 
+La primera vez que realices un despegue guiado, se creará un nuevo archivo `samconfig.toml` en la raíz de 
 tu proyecto con tus parámetros de implementación especificados. Este archivo acelera los futuros comandos 
 de implementación de sam al utilizar los mismos parámetros, sin necesidad de que los ingreses nuevamente.
 
@@ -205,7 +203,7 @@ capabilities = "CAPABILITY_IAM"
 image_repositories = []
 ```
 
-> Obtenga más información sobre las implantaciones guiadas y el archivo `samconfig.toml` con [esta entrada de blog](https://aws.amazon.com/blogs/compute/a-simpler-deployment-experience-with-aws-sam-cli).
+> Puedes obtener más información sobre las implantaciones guiadas y el archivo `samconfig.toml` con [esta entrada de blog](https://aws.amazon.com/blogs/compute/a-simpler-deployment-experience-with-aws-sam-cli).
 
 ## Inspeccionando el despliegue
 
@@ -236,11 +234,11 @@ Outputs:
     Value: !GetAtt HelloWorldFunctionRole.Arn
 ```
 
-Viste en la sección anterior cómo los valores de estas variables se emiten a la consola durante el despliegue. 
+Puedes ver en la sección anterior cómo los valores de estas variables se emiten a la consola durante el despliegue. 
 Es útil reconocer que se trata de [CloudFormation Outputs estándar](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html).
 
-Puede ver estos valores de **Outputs** en la consola de CloudFormation. Haga clic en la pila `sam-app` y luego vaya 
-a la pestaña `Outputs`. En esta pestaña, verá la URL de la API Gateway, el ARN de la función Lambda y el ARN 
+Puedes ver estos valores de **Outputs** en la consola de CloudFormation. Haz clic en la pila `sam-app` y luego vete 
+a la pestaña `Outputs`. En esta pestaña, verás la URL de la API Gateway, el ARN de la función Lambda y el ARN 
 del Rol IAM para la función.
 
 

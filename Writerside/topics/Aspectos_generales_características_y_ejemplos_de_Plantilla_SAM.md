@@ -1,7 +1,7 @@
-# Aspectos generales, características y ejemplos de Plantilla SAM
+# Plantilla SAM
 
 El Hello World Example TypeScript que acabas de inicializar crea una función Lambda y una API Gateway que expone 
-un recurso /hello. Cuando se llama con una solicitud GET de HTTP, la API Gateway invoca la función que asume un rol
+un recurso `/hello`. Cuando se llama con una solicitud GET de HTTP, la API Gateway invoca la función que asume un rol
 de ejecución IAM con permisos para interactuar con otros recursos de AWS, como por ejemplo una base de datos.
 
 ![image_3-.png](image_3.2.1.png)
@@ -9,7 +9,7 @@ de ejecución IAM con permisos para interactuar con otros recursos de AWS, como 
 ### Explora la plantilla SAM
 
 Tomémonos un momento para entender la estructura de una aplicación SAM explorando la plantilla SAM que representa 
-la arquitectura de tu aplicación sin servidor. Ve y abre el archivo `sam-app/template.yaml`.
+la arquitectura de la aplicación _serverless_. Abre el archivo `sam-app/template.yaml`.
 
 Debe tener una estructura como la siguiente. Esta es una aplicación Node y su template.yaml se verá ligeramente 
 diferente si se usa un runtime distinto.
@@ -104,27 +104,43 @@ y nombre de la función del punto de entrada.
 
 ```yaml
 HelloWorldFunction:
-  Type: AWS::Serverless::Function
-  Properties:
-    CodeUri: hello-world/
-    Handler: app.lambdaHandler
-    Runtime: nodejs16.x
-    Events:
-      HelloWorld:
-        Type: Api
-        Properties:
-          Path: /hello
-          Method: get
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: hello-world/app.lambdaHandler
+      Runtime: nodejs20.x
+      Architectures:
+        - x86_64
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: ES2022
+        Sourcemap: true
+        KeepNames: true
+        Format: esm
+        SourcesContent: true
+        MainFields: module,main
+        TreeShaking: true
+        EntryPoints:
+          - hello-world/app.ts
+        External:
+          "*"
 ```
-Observa que el **IAM role** no está especificado explícitamente, esto se debe a que SAM creará uno nuevo por defecto.
-Puedes anular este comportamiento y pasar tu propio role especificando el parámetro Role. 
+Observa que el **IAM role no está especificado explícitamente**, esto se debe a que SAM creará uno nuevo por defecto.
+Puedes anular este comportamiento y pasar tu propio role especificando el parámetro `Role`. 
 Para obtener una lista completa de los parámetros que puede especificar para una función Lambda, consulte la página SAM 
 [referencia](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction).
 
 ### Desencadenadores de Eventos
 
 La sección de **Eventos** es parte de la definición de la función. Esta sección especifica los diferentes eventos que 
-desencadenarán la función Lambda. En este caso, estamos especificando una solicitud **GET** HTTP a una **Pasarela de API** 
+desencadenarán la función Lambda. En este caso, estamos especificando una solicitud GET HTTP a API Gateway
 con un extremo de `/hello`.
 
 ```yaml
@@ -133,7 +149,7 @@ HelloWorldFunction:
   Properties:
     CodeUri: hello-world/
     Handler: app.lambdaHandler
-    Runtime: nodejs16.x
+    Runtime: nodejs20.x
     Events:
       HelloWorld:
         Type: Api
@@ -144,9 +160,9 @@ HelloWorldFunction:
 
 ### Outputs
 
-La sección de **Salidas** es opcional y declara los valores de salida que puedes importar a otras pilas de CloudFormation 
+La sección Outputs es opcional y declara los valores de salida que puedes importar a otras pilas de CloudFormation 
 (para crear referencias entre pilas), o simplemente para verlos en la consola de CloudFormation. En este caso, 
-estamos haciendo disponibles como **Salidas** la URL del punto final de la Puerta de enlace de la API, el ARN de 
+estamos haciendo disponibles como Outputs la URL del punto final de la API Gateway, el ARN de 
 la función Lambda, y el ARN del rol de IAM para facilitar su localización.
 
 ```yaml

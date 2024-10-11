@@ -7,7 +7,7 @@
 
     <section-starting-page>
         <title>Prácticas de trabajo con SAM</title>
-        <description>Fundamentos de trabajar con SAM y algunas sutilezas importantes</description>
+        <description>Fundamentos de trabajar con SAM y sutilezas importantes</description>
     <misc>
         <cards narrow="false">
             <a href="Que_es_SAM.md" description="Qué es SAM">Qué es SAM</a>

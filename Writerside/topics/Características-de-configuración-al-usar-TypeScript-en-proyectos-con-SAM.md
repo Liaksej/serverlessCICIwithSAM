@@ -1,12 +1,12 @@
-# Características de configuración al usar TypeScript en proyectos con SAM
+# TypeScript en proyectos con SAM
 
-Para construir y empaquetar **AWS Lambda Functions** escritas en TypeScript, puedes utilizar la CLI de AWS SAM con 
-el **empaquetador** de JavaScript `esbuild`. El empaquetador esbuild es compatible con las funciones Lambda 
+Para construir y empaquetar AWS Lambda Functions escritas en TypeScript, puedes utilizar la CLI de AWS SAM con 
+el empaquetador de JavaScript `esbuild`. El empaquetador `esbuild` es compatible con las funciones Lambda 
 que escribas en TypeScript.
 
-Para construir una función Lambda de TypeScript con esbuild, agregue un objeto `Metadata` a su recurso 
+Para construir una función Lambda de TypeScript con `esbuild`, agregue un objeto `Metadata` a su recurso 
 `AWS:Serverless::Function` y especifique `esbuild` para el `BuildMethod`. Cuando ejecute el comando `sam build`, 
-AWS SAM utiliza esbuild para empaquetar el código de su función Lambda.
+AWS SAM utiliza `esbuild` para empaquetar el código de su función Lambda.
 
 ## Propiedades de Metadata
 
@@ -20,7 +20,7 @@ Especifica el empaquetador para tu aplicación. El único valor admitido es `esb
 
 Especifica las propiedades de compilación para el código de tu Lambda Function.
 
-El objeto `BuildProperties` soporta las siguientes propiedades para esbuild. Todas las propiedades son opcionales. 
+El objeto `BuildProperties` soporta las siguientes propiedades para `esbuild`. Todas las propiedades son opcionales. 
 Por defecto, AWS SAM utiliza el handler de tu Lambda function como punto de entrada.
 
 #### EntryPoints
@@ -55,12 +55,12 @@ Como alternativa, cuando se incluye `NODE_OPTIONS: --enable-source-maps` en las 
 
 Cuando haya conflictos, `Sourcemap: false` tiene prioridad sobre `NODE_OPTIONS: --enable-source-maps`.
 
-> **Nota**
+> **Nota**  
 > Por defecto, Lambda cifra todas las variables de entorno en reposo con AWS Key Management Service (AWS KMS). 
 > Cuando se utilizan mapas de origen, para que el despliegue tenga éxito, el rol de ejecución de tu función debe tener permiso para 
 > realizar la acción `kms:Encrypt`.
 
-### SourcesContent
+#### SourcesContent
 
 Especifica si incluir tu código fuente en tu archivo de mapa fuente. Configura esta propiedad cuando `Sourcemap` se establece en `true`.
 
@@ -75,7 +75,7 @@ El valor por defecto es `SourcesContent: true`.
 
 Especifica la versión objetivo de ECMAScript. El valor predeterminado es `es2020`.
 
-### Un ejemplo de TypeScript Lambda function
+## Un ejemplo de TypeScript Lambda function en plantilla SAM
 
 ```yaml
 Resources:

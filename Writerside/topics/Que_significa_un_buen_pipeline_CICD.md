@@ -74,7 +74,7 @@ el 100 por ciento del tráfico de producción.
 
 ![h3yvwiEveK-7GGQt_XNEUddKdeu5tek0J.gif](h3yvwiEveK-7GGQt_XNEUddKdeu5tek0J.gif)
 
-### Comparando estrategias de implementación.
+### Comparando estrategias de implementación
 
 Para ayudarte a decidir qué estrategia de implementación usar para tu aplicación, deberás considerar el impacto en 
 el usuario, la posibilidad de deshacer, los factores del modelo de eventos y la velocidad de implementación de cada opción. 
@@ -92,40 +92,39 @@ a que cada fragmento de código pase por diferentes controles de calidad. Un pip
 a automatizar los pasos necesarios para lanzar la implementación de su software y estandarizar en un conjunto 
 central de controles de calidad. 
 
-Aquí tienes un ejemplo de un pipeline de implementación:
+Aquí tienes un ejemplo de un pipeline de despliegue continuo:
 
 ![image-cicd-flow.png](image-cicd-flow.png)
 
 Un pipeline de CI/CD está compuesto principalmente por cuatro pasos: 
 
-* Origen
-* Construcción
-* Prueba
-* Producción
+* Source
+* Build
+* Test
+* Production
 
 CI/CD puede ser visualizado como un pipeline, donde nuevo código es presentado en un extremo, probado 
-a lo largo de una serie de etapas (origen, construcción, prueba, puesta en escena y producción), 
-y luego publicado como código listo para producción.
+a lo largo de una serie de etapas (source, build, test), y luego publicado como código listo para producción.
 
 ![image](https://explore.skillbuilder.aws/files/a/w/aws_prod1_docebosaas_com/1728054000/OkLFRSay1U8Sv7H0Idus2Q/tincan/675621_1654804371_p1g5509l8kdo9ri4lrh1vhpr5f4_zip/assets/DZ1UoaCWMfRMXFVp_ky8CN063ZfgTWXbv.jpg)
 
 AWS ofrece una herramienta para cada fase del pipeline. Estas herramientas incluyen:
 
-* AWS CodeStar para conectar AWS con Git repositorio.
-* AWS CodeBuild para Construir y Probar
-* AWS CodeDeploy para Producción
-* AWS CodePipeline para entrega continua completamente administrada.
+* AWS CodeStar para conectar AWS con repositorio Git
+* AWS CodeBuild para etapas Build y Test
+* AWS CodeDeploy para etapa Production
+* AWS CodePipeline para administrar un despliegue continuo
 
 Para obtener más información sobre CI/CD en AWS, consulte la página [CI/CD on AWS whitepaper](https://docs.aws.amazon.com/whitepapers/latest/cicd_for_5g_networks_on_aws/cicd-on-aws.html).
 
 
-### Automatización del CI/CD pipeline
+### Automatización de CI/CD pipeline
 
 ![image](https://explore.skillbuilder.aws/files/a/w/aws_prod1_docebosaas_com/1728054000/OkLFRSay1U8Sv7H0Idus2Q/tincan/675621_1654804371_p1g5509l8kdo9ri4lrh1vhpr5f4_zip/assets/MGQJYdFXiGyUhga2_1WZyHTw-qYqrfmAF.jpg)
 
 Esta arquitectura muestra cómo puedes usar AWS CodePipeline con AWS SAM. Con CodePipeline, cada vez que haya 
 un cambio de código o un nuevo envío de código, puedes iniciar este canal de procesamiento, donde construyes, 
-pruebas y despliegas ese cambio de código.
+pruebas y despliegas cambios de código.
 
 ## Recursos adicionales
 

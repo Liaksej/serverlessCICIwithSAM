@@ -1,4 +1,4 @@
-# Configuración del proyecto con SAM
+# Configuración del proyecto
 
 ## Inicializar proyecto
 
@@ -72,7 +72,7 @@ Which runtime would you like to use?
 nodejs20.x
 ```
 
-Selecciona Zip como tipo de paquete y pon el nombre para el Proyecto.
+Selecciona Zip como tipo de paquete y pon el nombre para el proyecto.
 
 ```
 What package type would you like to use?
@@ -99,9 +99,8 @@ El proyecto debe estar inicializado ahora
 
 Deberías ver una nueva carpeta con el nombre del proyecto creada con un andamiaje básico de Hello World Example TypeScript.
 
-![pthoto_3.1.1.png](pthoto_3.1.1.png)
-
+![exmpl-prj.png](exmpl-prj.png)
 
 > **Nota**
-> Si está interesado en aprender más sobre la inicialización de proyectos SAM, 
-> puede encontrar la referencia completa para el comando sam init en el archivo [SAM CLI reference](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-init.html).
+> Si estás interesado en aprender más sobre la inicialización de proyectos SAM, 
+> puedes encontrar la referencia completa para el comando `sam init` por el enlace [SAM CLI reference](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-init.html).
