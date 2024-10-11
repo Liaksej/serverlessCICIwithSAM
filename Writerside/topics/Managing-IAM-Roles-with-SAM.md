@@ -59,19 +59,19 @@ Vamos a echar un vistazo al rol de ejecución de esa función en la consola de A
 <procedure title="Procedimiento">
     <step>Abra la página <a href="https://console.aws.amazon.com/lambda/home#/functions">Functions page of the Lambda console</a></step>
     <step>Localiza la función en la lista (utiliza la barra de búsqueda si es necesario) y haz clic sobre ella.</step>
-    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/select-lambda-function.png">
+    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/select-lambda-function.png"/>
     <step>Haz clic en la pestaña "Configuración", y luego selecciona "Permisos" en el menú de la izquierda.</step>
-    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/select-configuration-tab.png">
+    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/select-configuration-tab.png"/>
     <step>En la sección de resumen de Recursos, elige un servicio de la lista desplegable para ver los permisos relacionados
    con dicho servicio. En este caso, solo debería haber un servicio enlistado, Amazon CloudWatch Logs.</step>
-    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/resource-summary-1.png">
+    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/resource-summary-1.png"/>
     <step>Bajo el resumen de recursos, revisa los servicios y recursos a los que la <b>función</b> puede acceder.
    En el cuadro de alerta de información, vemos que estos permisos provienen de una Política Administrada de AWS,
    <code>AWSLambdaBasicExecutionRole</code>.</step>
-    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/resource-summary-2.png">
+    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/resource-summary-2.png"/>
     <step>Por último, haga clic en el enlace del rol de ejecución para abrir la consola IAM.</step>
-    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/open-iam-console.png">
-    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/lambda-execution-role.png">
+    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/open-iam-console.png"/>
+    <img src="https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/lambda-execution-role.png"/>
 </procedure>
 
 Este Rol de IAM define a qué puedes acceder tu función Lambda. IAM trabaja en base al principio de privilegio mínimo:
