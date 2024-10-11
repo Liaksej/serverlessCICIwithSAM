@@ -7,6 +7,7 @@
     <build-profile instance="scws">
         <variables>
             <noindex-content>true</noindex-content>
+            <ignore-problems>MRK015,MRK017,CDE016,MRK023,MRK024,CTT002,REF005</ignore-problems>
         </variables>
     </build-profile>
 

@@ -1,8 +1,6 @@
 # Prueba local de funciones Lambda
 
-Now that you have a SAM application. You will learn how to run it and test it locally using the AWS SAM CLI. 
-This is important because its part of the day to day development workflow. It helps you verify if the application is 
-behaving as expected, debug what's wrong, and fix any issues before pushing your changes to a central repository.
+Ahora que tienes una aplicación SAM. Aprenderás cómo ejecutarla y probarla localmente utilizando la CLI de AWS SAM. Esto es importante porque es parte del flujo de trabajo diario de desarrollo. Te ayuda a verificar si la aplicación se está comportando como se espera, depurar lo que está mal y solucionar cualquier problema antes de enviar tus cambios a un repositorio central.
 
 ![image_3.4.1.png](image_3.4.1.png)
 
@@ -17,7 +15,7 @@ cd ~/environment/sam-app/hello-world
 npm install
 ```
 
-Example output:
+Resultado de ejemplo:
 
 ```
 npm notice created a lockfile as package-lock.json. You should commit this file.
@@ -32,64 +30,44 @@ added 100 packages from 72 contributors and audited 101 packages in 3.879s
 found 0 vulnerabilities
 ```
 
-### Run using SAM CLI
+### Ejecutar usando SAM CLI
 
-There are two ways of running a Serverless app locally:
+Hay dos formas de ejecutar una aplicación sin servidor de forma local:
 
-By invoking an individual Lambda function ([SAM Local Invoke reference](https://docs.aws.amazon.com/en_pv/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html))
+Al invocar una función Lambda individual ([SAM Local Invoke reference](https://docs.aws.amazon.com/en_pv/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html))
 
 ```shell
 cd ~/environment/sam-app
 sam local invoke --event events/event.json
 ```
 
-By running a local HTTP server that simulates API Gateway
+Al ejecutar un servidor HTTP local que simule API Gateway
 
 ```shell
 cd ~/environment/sam-app
 sam local start-api --port 8080
 ```
 
-In this module, we will run a local HTTP server that simulates API Gateway (2).
+En este módulo, ejecutaremos un servidor HTTP local que simula API Gateway.
 
-> **Note**  
->If you receive a permissions error pulling the docker image, you may have to authenticate to the ECR Public repository 
-> with the command shown in the following code block.
+### Probar tu punto de acceso
 
-```shell
-aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
-```
+Una vez que tu servidor local esté en ejecución, podemos enviar solicitudes HTTP para probarlo. Elije una de las siguientes opciones:
 
-> **Note**  
->In a Cloud9 workspace, you must use port 8080, 8081 or 8082 to be able to open the URL in the local browser for preview.
+> **Nota**
+> La primera solicitud llevará varios segundos ya que SAM descarga una imagen Docker. Sigue leyendo para aprender por qué SAM hace esto.
 
-### Test your endpoint
-
-Once your local server is running, we can send HTTP requests to test it. Choose one of the following options:
-
-> **Note**
-> The first request will take several seconds as SAM downloads a Docker image. Continue reading to learn why SAM does this.
-
-#### Option A) Using CURL
-
-Without stopping the running process, open a new terminal.
+Sin detener el proceso en ejecución, abre un nuevo terminal.
 
 ![image3.4.2.png](image3.4.2.png)
 
-Test your endpoint by running a CURL command that triggers an HTTP GET request.
+Prueba tu endpoint ejecutando un comando CURL que provoque una solicitud GET HTTP.
 
 ```shell
 curl http://localhost:8080/hello
 ```
 
-#### Option B) Using a browser window
-
-In Cloud9, go to the top menu and chose **Tools > Preview > Preview Running Application**. A browser tab will open, append 
-`/hello` to the end of the URL. This will invoke your Lambda function locally.
-
-![image_3.4.3.png](image_3.4.3.png)
-
-> **Note**
-> Notice how SAM is pulling a Docker container image. This is how SAM is able to simulate the Lambda runtime locally 
-> and run your function. The first invocation might take a few seconds due to the `docker pull` command, but subsequent 
-> invocations will be faster. SAM will pull the appropriate container based on the runtime you have configured in `template.yaml`.
+> **Nota**
+> Observa cómo SAM está descargando una imagen de contenedor Docker. De esta forma, SAM puede simular el runtime de Lambda de forma local 
+> y ejecutar tu función. La primera invocación puede tardar unos segundos debido al comando `docker pull`, pero las invocaciones posteriores 
+> serán más rápidas. SAM descargará el contenedor apropiado basado en el tiempo de ejecución que hayas configurado en `template.yaml`.

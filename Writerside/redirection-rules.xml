@@ -58,4 +58,28 @@
             <![CDATA[Created after removal of "<Canary-Linear-deployment-with-SAM.md>" from Serverless CI/CD with SAM]]></description>
         <accepts>Canary-Linear-deployment-with-SAM.html</accepts>
     </rule>
+    <rule id="79fe700b">
+        <description>Created after removal of "Estructura del proyecto y archivos responsables del funcionamiento del
+            pipeline" from Serverless CI/CD with SAM
+        </description>
+        <accepts>Структура-проекта-и-файлов-отвчающих-за-работу-pipeline.html</accepts>
+    </rule>
+    <rule id="64a44ed6">
+        <description>Created after removal of "Configuración del flujo de trabajo CI/CD para trabajar con SAM" from
+            Serverless CI/CD with SAM
+        </description>
+        <accepts>Конфигурация-CI-CD-пайплайна-для-работы-с-SAM.html</accepts>
+    </rule>
+    <rule id="768fa2dd">
+        <description>Created after removal of "Section Starting Page" from Serverless CI/CD with SAM</description>
+        <accepts>Section-Starting-Page.html</accepts>
+    </rule>
+    <rule id="5b72c966">
+        <description>Created after removal of "Introducción" from Serverless CI/CD with SAM</description>
+        <accepts>Introduction.html</accepts>
+    </rule>
+    <rule id="54aa0a49">
+        <description>Created after removal of "This is the first topic" from Serverless CI/CD with SAM</description>
+        <accepts>Default-topic.html</accepts>
+    </rule>
 </rules>

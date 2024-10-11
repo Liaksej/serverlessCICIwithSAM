@@ -1,25 +1,26 @@
-# Managing IAM Roles with SAM
+# Administrar roles de IAM con SAM
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/what-is-an-iam-role.png)
 
-So far in this workshop, we haven't discussed what the Lambda function is allowed to do or how to control access 
-to other AWS services or resources. Because the sample application and Lambda function merely returns 
-a `Hello World!` message you may assume that it doesn't depend on other AWS services. This is a natural assumption, 
-but the function does rely on at least one other AWS service. Can you guess which one?
+Hasta ahora no hemos discutido qué se permite hacer a la función Lambda o cómo controlar el acceso a otros servicios 
+o recursos de AWS. Debido a que la aplicación de muestra y la función Lambda simplemente devuelven un mensaje 
+de 'Hello World, es posible asumir que no depende de otros servicios de AWS. Esta es una suposición natural, 
+pero la función sí depende de al menos otro servicio de AWS. ¿Puedes adivinar cuál es?
 
-In this module, you'll learn different ways to grant least-privledge access to AWS resources from your Lambda functions. 
-By the end of this module you will have an understanding of the three different mechanisms to manage Lambda's access:
+En este capítulo, aprenderás diferentes formas de otorgar acceso de privilegio mínimo a los recursos de AWS desde 
+tus funciones Lambda. Al final de, tendrás un entendimiento de los tres mecanismos diferentes para gestionar 
+el acceso de Lambda:
 
-* AWS SAM Policy Templates
-* AWS SAM Connectors
-* Handwritten IAM policies
+* Plantillas de directivas de AWS SAM
+* Conectores de AWS SAM
+* Políticas de IAM escritas a mano
 
 ## IAM Execution Role
 
-Before we get started, let's cover how Lambda is able, or not able, to access different AWS services and resources.
+Antes de empezar, veamos cómo Lambda es capaz, o no es capaz, de acceder a diferentes servicios y recursos de AWS.
 
-Below is the `template.yaml` file from the hellow world example from Module 1. Notice that you don't see any explicit 
-permissions for the Lambda function:
+A continuación se muestra el archivo 'template.yaml' del ejemplo anterior. Observa que no se ve ningún 
+permiso explícito para la función Lambda:
 
 ```yaml
 Resources:
@@ -27,101 +28,107 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: hello-world/
-      Handler: app.lambdaHandler
-      Runtime: nodejs16.x
+      Handler: app.handler
+      Runtime: nodejs20.x
+      Architectures:
+        - x86_64
       Events:
         HelloWorld:
-          Type: Api
+          Type: Api 
           Properties:
             Path: /hello
             Method: get
+      ...
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Format: esm
+        ...
 ```
 
-By default, Lambda functions write logs to to AWS CloudWatch Logs. If Lambda writes to CloudWatch without explicit 
-permission from you, how is this working?
+Por defecto, las funciones de Lambda escriben registros en AWS CloudWatch Logs. Si Lambda escribe en CloudWatch 
+sin permiso explícito de parte tuya, ¿cómo está funcionando esto?
 
-Every Lambda function has an AWS Identity and Access Management (IAM) role called an execution role. 
-An execution role grants the function permission to access AWS services and resources. In the "Hello World" 
-example that you have been using, SAM has created an execution role for you with the minimum permissions 
-to access CloudWatch Logs.
+Cada función Lambda tiene un rol de ejecución de AWS Identity and Access Management (IAM) llamado un rol de ejecución. 
+Un rol de ejecución otorga a la función permiso para acceder a servicios y recursos de AWS. En el ejemplo "Hello World" 
+que has estado utilizando, SAM ha creado un rol de ejecución para ti con los permisos mínimos para acceder 
+a CloudWatch Logs.
 
-Let's go have a look at that function's execution role in the AWS console.
+Vamos a echar un vistazo al rol de ejecución de esa función en la consola de AWS.
 
-> **Note**
-> If you haven't worked Module 1 that is fine, just follow along with the screen shots below.
-
-1. Open the [Functions page of the Lambda console](https://console.aws.amazon.com/lambda/home#/functions).
-2. Locate the function in the list (use the search bar if necessary) and click on it.
+1. Abra la página [Functions page of the Lambda console](https://console.aws.amazon.com/lambda/home#/functions).
+2. Localiza la función en la lista (utiliza la barra de búsqueda si es necesario) y haz clic sobre ella.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/select-lambda-function.png)
 
-3. Click the "Configuration" tab, and then choose "Permissions" on the left menu.
+3. Haz clic en la pestaña "Configuración", y luego selecciona "Permisos" en el menú de la izquierda.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/select-configuration-tab.png)
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/select-permissions.png)
 
-4. In the Resource summary section, choose a service from the dropdown list to see permissions related 
-to that service. In this instance, there should only be one service listed, Amazon CloudWatch Logs.
+4. En la sección de resumen de Recursos, elige un servicio de la lista desplegable para ver los permisos relacionados 
+con dicho servicio. En este caso, solo debería haber un servicio enlistado, Amazon CloudWatch Logs.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/resource-summary-1.png)
 
-5. Under Resource summary, review the services and resources that the function can access. In the information alert 
-box we see that these permissions come from an AWS Managed Policy, `AWSLambdaBasicExecutionRole`
+5. Bajo el resumen de recursos, revisa los servicios y recursos a los que la *función* puede acceder. 
+En el cuadro de alerta de información, vemos que estos permisos provienen de una Política Administrada de AWS, 
+`AWSLambdaBasicExecutionRole`.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/resource-summary-2.png)
 
-6. Finally, click on the execution role link to open the IAM console.
+6. Por último, haga clic en el enlace del rol de ejecución para abrir la consola IAM.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/open-iam-console.png)
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/lambda-execution-role.png)
 
-This IAM Role defines what your Lambda function can access. IAM works on the principle of least-privledge: 
-without explict permissions, your Lambda function will not be able to access other AWS resources. The execution 
-role can have zero or more policies attached to it. In the coming sections you'll learn how to manage this execution 
-role and add your own policies.
+Este Rol de IAM define a qué puede acceder tu función Lambda. IAM trabaja en base al principio de privilegio mínimo: 
+sin permisos explícitos, tu función Lambda no podrá acceder a otros recursos de AWS. El rol de ejecución puede tener 
+cero o más políticas adjuntas a él. En las secciones siguientes aprenderás cómo gestionar este rol de ejecución 
+y añadir tus propias políticas.
 
-In this example, there is a single policy named `AWSLambdaBasicExecutionRole`. `AWSLambdaBasicExecutionRole` is 
-an [AWS managed policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html#aws-managed-policies) 
-that is created and administered by AWS. AWS managed policies are designed to provide 
-permissions for many common use cases. Every Lambda function needs a minimum set of permissions to use 
-CloudWatch logs. The `AWSLambdaBasicExecutionRole` defines these permissions which, by default, apply to 
-all Lambda functions.
+En este ejemplo, hay una única política llamada `AWSLambdaBasicExecutionRole`. `AWSLambdaBasicExecutionRole` es 
+una [AWS managed policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html#aws-managed-policies) 
+creada y administrada por AWS. Las políticas gestionadas de AWS están diseñadas para proporcionar 
+permisos para muchos casos de uso comunes. Cada función de Lambda necesita un conjunto mínimo de permisos para utilizar 
+logs de CloudWatch. El `AWSLambdaBasicExecutionRole` define estos permisos que, por defecto, se aplican a 
+todas las funciones Lambda.
 
-But, what happens when your Lambda function needs access to other AWS resources like a DynamoDB table? 
-The answer is that the function will require additional permissions, such as `dynamodb:Query` or `dynamodb:Scan`.
+Pero, ¿qué sucede cuando tu función Lambda necesita acceso a otros recursos de AWS como una tabla DynamoDB?
+La respuesta es que la función requerirá permisos adicionales, como `dynamodb:Query` o `dynamodb:Scan`.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/lambda-dynamodb-permissions.png)
 
-To allow the Lambda function to access DynamoDB, you would need to augment the function definition in 
-`template.yaml` by adding the necessary permissions. Once the correct `dynamoddb:` permissions are added 
-the function's execution role, your function would be able to perform actions on your DynamoDB table.
+Para permitir que la función Lambda acceda a DynamoDB, debes ampliar la definición de la función en `template.yaml` 
+añadiendo los permisos necesarios. Una vez que se añadan los permisos correctos de `dynamoddb:` al rol de ejecución de
+la función, esta podrá realizar acciones en tu tabla de DynamoDB.
 
-To demonstrate the various options for specifying IAM permissions in SAM, you will update the sample 
-application so that it reads and writes from and to a DynamoDB table.
+Para demostrar las diferentes opciones para especificar permisos IAM en SAM, actualizarás la muestra de la aplicación para que lea y escriba desde y hacia una tabla de DynamoDB.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/sam-workshop-connectors-architecture.png)
 
-## Initialize project
+## Inicializa el proyecto
 
-> **Be sure to select the correct option**
-> We show the Serverless API option as option 3 below. As new quick start templates are released, the exact location 
-> of this option may change. If you are interested in exploring the quick start templates, you can find them at 
-> [AWS SAM CLI Application Templates](https://github.com/aws/aws-sam-cli-app-templates) 
+> **Asegúrate de seleccionar la opción correcta**.
+> A continuación mostramos la opción API sin servidor como opción 3. A medida que se publiquen nuevas plantillas 
+> de inicio rápido, la ubicación exacta de esta opción puede cambiar. Si estás interesado en explorar las plantillas 
+> de inicio rápido, puedes encontrarlas en [AWS SAM CLI Application Templates](https://github.com/aws/aws-sam-cli-app-templates) 
 
-Run the following command to scaffold a new project:
+Ejecuta el siguiente comando para generar la estructura básica de un nuevo proyecto:
 
 ```shell
 sam init
 ```
 
-In the wizard, select
+En el asistente, selecciona
 
 * `AWS QuickSart Templates` and
 * `Serverless API`
 
-Do **not** use the shortcut to use the latest Python version. _Note that the numbered answers may be different in your terminal._
+No utilices el atajo para utilizar la última versión de Python. _Ten en cuenta que las respuestas numeradas pueden ser 
+distintas en tu terminal._
 
 ```
 Which template source would you like to use?
@@ -168,20 +175,21 @@ Would you like to enable X-Ray tracing on the function(s) in your application?  
 Project name [sam-app]:
 ```
 
-You should now see a new folder, `sam-app`, containing the generated scaffolding for the project. 
-Notice that there are three JavaScript files, each which represents a Lambda function and specific responsibility.
+Deberías ver ahora una nueva carpeta, `sam-app`, que contiene el andamiaje generado para el proyecto. 
+Observa que hay tres archivos de JavaScript, cada uno de los cuales representa una función Lambda y 
+una responsabilidad específica.
 
-* `get-all-items.js` -> retrieves all items stored in the DynamoDB table
-* `get-by-id.js` -> retrieves an item by its unique ID
-* `put-item.js` -> write an item to the DynamoDB table
+* `get-all-items.js` -> obtiene todos los elementos almacenados en la tabla de DynamoDB
+* `get-by-id.js` -> recupera un elemento por su ID único
+* `put-item.js` -> escribir un elemento en la tabla de DynamoDB
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/project-structure.png)
 
-Feel free to open up any of these files to see how they use the AWS SDK is used to access DynamoDB.
+Siéntate libre de abrir cualquiera de estos archivos para ver cómo se utiliza el SDK de AWS para acceder a DynamoDB.
 
-## Deploy the app
+## Despliegue de la aplicación
 
-Since this is the first time you are deploying this application, you will use the `--guided` flag with the `sam deploy` command.
+Dado que es la primera vez que estás implementando esta aplicación, utilizarás la bandera `--guided` con el comando `sam deploy`.
 
 ```shell
 cd ~/environment/sam-app
@@ -189,15 +197,14 @@ sam build
 sam deploy --guided
 ```
 
-> **Missing authorization**
-> Make sure to answer y to the question about the Lambda functions not having authorization defined: 
-> `getAllItemsFunction may not have authorization defined, Is this okay? [y/N]: y`
+> **Autorización faltante**
+> Asegúrate de responder y a la pregunta sobre si las funciones Lambda no tienen definida la autorización: 
+> `La función `getAllItemsFunction` podría no tener definida la autorización, ¿Está bien? [y/N]: y`
 
-### Deployment completed
+### Despliegue completado
 
-This command will take a few minutes to finish because it is creating 
-the resources (Lambda functions, API Gateway and IAM roles, etc.). After the deployment 
-completes successfully you will see an output similar to the following:
+Este comando tardará unos minutos en finalizar porque está creando los recursos (funciones Lambda, Puerta de enlace API 
+y roles IAM, etc.). Después de que la implementación se complete con éxito, verás una salida similar a la siguiente:
 
 ```
 CloudFormation outputs from deployed stack
@@ -210,31 +217,31 @@ Value               https://q9kbh1buk3.execute-api.us-west-2.amazonaws.com/Prod/
 ---------------------------------------------------------------------------------------------------------------------------
 ```
 
-Export the new HTTPS endpoint:
+Exporta el nuevo endpoint HTTPS:
 
 ```shell
 export ENDPOINT=$(aws cloudformation describe-stacks --stack-name sam-app | \
     jq -r '.Stacks[].Outputs[].OutputValue | select(startswith("https://"))')
 ```
 
-### Test the endpoint
+### Probar el endpoint
 
-As a sanity check, make a request to your new serverless application to make sure it's working. 
-Since your new API is reading from a DynamoDB table, you can expect and empty response.
+Como comprobación de funcionamiento, realiza una solicitud a tu nueva aplicación sin servidor para asegurarte de que 
+esté funcionando. Dado que tu nueva API está leyendo de una tabla DynamoDB, puedes esperar una respuesta vacía.
 
 ```shell
 curl -s $ENDPOINT
 ```
 
-The response will be an empty array.
+La respuesta será un array vacío.
 
 ```shell
 []
 ```
 
-### Add data
+### Añadimos datos
 
-Add a few items to the DynamoDB table so that you will have some data to query. This executes the putItem API with three unique items.
+Agrega algunos elementos a la tabla DynamoDB para que tengas datos para consultar. Esto ejecuta la API putItem con tres elementos únicos.
 
 ```shell
 curl -d "{\"id\": \"id1\",\"name\": \"name1\"}" -X POST $ENDPOINT
@@ -242,13 +249,13 @@ curl -d "{\"id\": \"id2\",\"name\": \"name2\"}" -X POST $ENDPOINT
 curl -d "{\"id\": \"id3\",\"name\": \"name3\"}" -X POST $ENDPOINT
 ```
 
-Use the `getAllItems` API to see the items you just added:
+Utiliza la API `getAllItems` para ver los elementos que acabas de agregar:
 
 ```shell
 curl -s $ENDPOINT | jq
 ```
 
-You should see a list of items.
+Deberías ver una lista de elementos.
 
 ```json
 [
@@ -267,7 +274,7 @@ You should see a list of items.
 ]
 ```
 
-Finally, fetch individual items with the `getItemById` API:
+Finalmente, obtén elementos individuales con la API `getItemById`:
 
 ```shell
 curl -s $ENDPOINT/id1 | jq
@@ -278,19 +285,18 @@ curl -s $ENDPOINT/id3 | jq
 ## SAM Policy Templates
 
 [SAM Policy Templates](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html) 
-are shortcuts that make it easy to add scoped permissions to Lambda functions and 
-Step Functions workflows. These are specific to SAM, and can make the work of IAM permissions management easier. 
-The AWS SAM team maintains a number of policy templates for common integrations like DynamoDB and S3. 
-In this module you'll learn how SAM Policy Templates work, and how to use them in your own applications.
+son accesos directos que facilitan la adición de permisos de ámbito a funciones Lambda y flujos de trabajo de 
+flujos de trabajo de Step Functions. Son específicas de SAM y pueden facilitar el trabajo de gestión de permisos de IAM. 
+El equipo de AWS SAM mantiene una serie de plantillas de políticas para integraciones comunes como DynamoDB y S3. 
+En este módulo aprenderá cómo funcionan las plantillas de políticas de SAM y cómo utilizarlas en sus propias aplicaciones.
 
-### Your first policy template
+### Tu primera plantilla de política
 
-In the last section to used your API to read and write data from and to a DynamoDB table. 
-SAM automatically creates a basic execution role for each Lambda function in your SAM application 
-that allows the functions to access CloudWatch Logs. But in this new application, how did 
-the Lambda functions have access to DyanamoDB?
+En la última sección se utilizó su API para leer y escribir datos desde y hacia una tabla de DynamoDB. SAM crea 
+automáticamente un rol de ejecución básico para cada función Lambda en su aplicación SAM que permite a las 
+funciones acceder a CloudWatch Logs. Pero en esta nueva aplicación, ¿cómo acceden las funciones Lambda a DynamoDB?
 
-Open the `template.yaml` file and look at the Policies section in the getAllItemsFunction definition.
+Abra el archivo `template.yaml` y mire la sección de 'Policies' en la definición de la función 'getAllItemsFunction'.
 
 ```yaml
  # This is a Lambda function config associated with the source code: get-all-items.js
@@ -320,22 +326,22 @@ Open the `template.yaml` file and look at the Policies section in the getAllItem
             Method: GET
 ```
 
-Notice the `DynamoDBCrudPolicy` listed under the `Policies` propery. The key name, `DynamoDBCrudPolicy`, 
-refers to a [specific policy template](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-template-list.html#dynamo-db-crud-policy). 
-This policy template expects a value for the `TableName` variable 
-which SAM uses to add a number IAM permissions to your Lambda's execution role. As you may guess, 
-SAM adds create, read, update and delete access (CRUD) so that the function can perform 
-the following actions on the `SampleTable` DynamoDB table:
+Tenga en cuenta que `DynamoDBCrudPolicy` aparece en la propiedad `Policies`. El nombre clave, `DynamoDBCrudPolicy`, 
+hace referencia a una [plantilla de política específica](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-template-list.html#dynamo-db-crud-policy). 
+Esta plantilla de política espera un valor para la variable `TableName` 
+que SAM utiliza para añadir una serie de permisos IAM al rol de ejecución de su Lambda. Como puedes suponer 
+SAM añade acceso de creación, lectura, actualización y eliminación (CRUD) para que la función pueda realizar 
+las siguientes acciones en la tabla `SampleTable` de DynamoDB:
 
 * put items
 * get items
 * scan items
 
-### Remove permissions
+### Eliminar permisos
 
-Next, you'll remove these permissions and see the effects.
+A continuación, eliminarás estos permisos y verás los efectos.
 
-Take away the the `DynamoDBCrudPolicy` property by commenting it out in the template.yaml file.
+Quita la propiedad `DynamoDBCrudPolicy` comentándola en el archivo template.yaml.
 
 ```yaml
 # This is a Lambda function config associated with the source code: get-all-items.js
@@ -350,10 +356,10 @@ getAllItemsFunction:
     # ...
 ```
 
-Next, make the following changes to the get-all-items.js Lambda function code. In the catch block, append the 
-exception to the response so that we will have better diagnostic information if there is an error. 
-The highlighted lines show the changes to make. It's also ok to copy and paste the entire code block below 
-and replace your existing function.
+A continuación, realice los siguientes cambios en el código de la función Lambda get-all-items.js. En el bloque catch, 
+agregue la excepción a la respuesta para que tengamos mejor información diagnóstica si hay un error. Las líneas 
+resaltadas muestran los cambios a realizar. También está bien copiar y pegar el bloque de código completo 
+a continuación y reemplazar su función existente.
 
 ```javascript
 // Create clients and set shared const values outside of the handler.
@@ -403,15 +409,15 @@ export const getAllItemsHandler = async (event) => {
 }
 ```
 
-Next, build and deploy the application.
+A continuación, construye e implementa la aplicación.
 
 ```shell
 cd ~/environment/sam-app
 sam build && sam deploy
 ```
 
-After the deployment completes, make a request to the getAllItems API. You'll see an error that looks similar 
-to the following, with details for your Lambda function and DynamoDB table:
+Después de que se complete el despliegue, haz una solicitud a la API getAllItems. Verás un error que se ve similar 
+al siguiente, con detalles para tu función Lambda y tabla DynamoDB:
 
 ```shell
 curl -s $ENDPOINT
@@ -422,22 +428,22 @@ Unable to call DynamoDB. Table resource not found. AccessDeniedException: ...
 is not authorized to perform: dynamodb:Scan on resource: ... because no identity-based policy allows the dynamodb:Scan action
 ```
 
-As expected, the `getAllItemsFunction` Lambda function throws an error because it no longer has permission to scan the DynamoDB table.
+Como era de esperar, la función Lambda `getAllItemsFunction` lanza un error porque ya no tiene permiso para escanear la tabla DynamoDB.
 
-Fix the function by uncommenting the `DynamoDBCrudPolicy` so that it again has the required permissions.
+Corrija la función descomentando el `DynamoDBCrudPolicy` para que nuevamente tenga los permisos requeridos.
 
-> **Note**
-> To understand SAM Policy Templates, you need some familiarity with [IAM Policy syntax](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html). 
-> While SAM's Policy Templates are convenient they are not a substitute for reading and understanding IAM policies.
+> **Nota**
+> Para entender las SAM Policy Templates, se necesita cierta familiaridad con la [sintaxis de políticas de IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html). 
+> Aunque las plantillas de políticas de SAM son prácticas, no sustituyen la lectura y comprensión de las políticas de IAM.
 
-### Least privledges
+### Principio de privilegios mínimos
 
-Open the other two JavaScript files and look at the Policies statements. Notice that they also reference 
-the DynamoDBCrudPolicy. Each function needs specific permissions (read, write or scan) to do their jobs, 
-but DynamoDBCrudPolicy grants all of these permissions. We can restrict access to the DyanmoDB table 
-further with different SAM policy templates while still allowing each function to do their jobs. If you look 
-at the list of SAM Policy templates, there are some more appropriate templates for scoping the permissions 
-for our three functions:
+Abre los otros dos archivos JavaScript y observa las declaraciones de las políticas. Observa que también hacen 
+referencia a la política `DynamoDBCrudPolicy`. Cada función necesita permisos específicos (lectura, escritura o escaneo) 
+para realizar sus tareas, pero `DynamoDBCrudPolicy` otorga todos estos permisos. Podemos restringir el acceso a 
+la tabla de DynamoDB aún más con diferentes plantillas de políticas SAM, al mismo tiempo que permitimos que cada 
+función realice su tarea. Si observas la lista de plantillas de políticas SAM, encontrarás algunas plantillas más 
+adecuadas para delimitar los permisos de nuestras tres funciones.
 
 | Function       | SAM Policy Template |
 |----------------|---------------------|
@@ -445,8 +451,8 @@ for our three functions:
 | get-item-by-id | DynamoDBReadPolicy  |
 | get-all-items  | DynamoDBReadPolicy  |
 
-In the `template.yaml` file, change the Policy of each function to the more narrowly scoped policy listed above. 
-Note that only the changes are shown in the yaml below.
+En el archivo `template.yaml`, cambie la Política de cada función a la política más específica enumerada arriba. 
+Tenga en cuenta que solo se muestran los cambios en el yaml a continuación.
 
 ```yaml
  getAllItemsFunction:
@@ -480,26 +486,26 @@ Note that only the changes are shown in the yaml below.
       ...
 ```
 
-After you've made these changes redeploy the application and verify that our APIs still work.
+Después de haber realizado estos cambios, vuelve a implementar la aplicación y verifica que nuestras APIs sigan funcionando.
 
 ```shell
 cd ~/environment/sam-app
 sam build && sam deploy
 ```
 
-Test the put-items api first:
+Prueba primero el API de colocar-artículos:
 
 ```shell
 curl -d "{\"id\": \"id4\",\"name\": \"name4\"}" -X POST $ENDPOINT
 ```
 
-Next, test the get-all-items API:
+A continuación, prueba la API `get-all-items`:
 
 ```shell
 curl -s $ENDPOINT | jq 'sort_by(.id)'
 ```
 
-Item 4 is now in the list.
+El ítem 4 ahora está en la lista.
 
 ```json
 [
@@ -522,7 +528,7 @@ Item 4 is now in the list.
 ]
 ```
 
-And finally, test the get-item-by-id API:
+Y finalmente, prueba la API 'get-item-by-id':
 
 ```shell
 curl -s $ENDPOINT/id1 | jq
@@ -535,22 +541,24 @@ curl -s $ENDPOINT/id1 | jq
 }
 ```
 
-You just learned how SAM Policy Templates make it easy to grant Lambda functions access to specific AWS resources without needing to hand-write IAM policies.
+Acabas de aprender cómo las Plantillas de Políticas de SAM facilitan la concesión de acceso a funciones Lambda 
+a recursos específicos de AWS sin necesidad de escribir manualmente políticas de IAM.
 
-## Inline and Managed Policies
+## Políticas en línea y administradas
 
-In the last module you learned that SAM Policy templates are an easy way to grant access to different AWS resources 
-from your Lambda functions. As useful and easy as they are you may sometimes need to be more specific 
-in how you handle IAM access. In other ciccumstances there may not be a policy template that fits with 
-what you need. There could also be an [AWS managed policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html#aws-managed-policies) that you could use to simplify your application.
+En el apartado anterior aprendiste que las plantillas de políticas SAM son una forma sencilla de conceder acceso 
+a diferentes recursos de AWS desde tus funciones Lambda. Por muy útiles y fáciles que sean, a veces puede que necesites 
+ser más específico en la forma de gestionar el acceso IAM. En otras circunstancias puede que no haya una plantilla 
+de política que se ajuste a lo que necesitas. También podría haber una [política administrada por AWS](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html#aws-managed-policies) 
+que podrías utilizar para simplificar tu aplicación.
 
-SAM allows you to hand craft your own IAM Policies just as you would in raw CloudFormation. 
-It also allows you to refer to AWS managed policies by name or ARN. In this module you'll 
-learn how to add your own low-level policies and AWS managed policies in your SAM applications.
+SAM te permite elaborar tus propias Políticas de IAM tal como lo harías en CloudFormation sin procesar. 
+También te permite hacer referencia a las políticas administradas por AWS por nombre o ARN. En este módulo aprenderás 
+cómo agregar tus propias políticas de bajo nivel y políticas administradas por AWS en tus aplicaciones SAM.
 
-### Authoring an inline policy
+### Crear una **Política en línea**.
 
-In the last module you used the `DynamoDBCrudPolicy` SAM policy template to grant CRUD access to a DynamoDB table.
+En el apartado anterior, usaste la plantilla de política SAM `DynamoDBCrudPolicy` para otorgar acceso CRUD a una tabla de DynamoDB.
 
 ```yaml
   # This is a Lambda function config associated with the source code: get-all-items.js
@@ -563,40 +571,13 @@ In the last module you used the `DynamoDBCrudPolicy` SAM policy template to gran
       ...
 ```
 
-In that module, the `Policies` property references a single SAM Policy template. However, `Policies` can also include an inline IAM policy.
+En ese párrafo, la propiedad 'Policies' hace referencia a una plantilla de directiva SAM única. Sin embargo, 
+'Policies' también puede incluir una directiva IAM en línea.
 
-Make the following change to your `template.yaml` file, replacing the `DynamoDBCrudPolicy` statement with the 
-inline IAM policy. The highlighed lines below show the change to make.
+Realice el siguiente cambio en su archivo `template.yaml`, reemplazando la declaración `DynamoDBCrudPolicy` por 
+la política IAM en línea. Las líneas resaltadas a continuación muestran el cambio a realizar.
 
 ```yaml
-
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
 # This is a Lambda function config associated with the source code: get-all-items.js
 getAllItemsFunction:
   Type: AWS::Serverless::Function
@@ -630,14 +611,15 @@ getAllItemsFunction:
           Method: GET
 ```
 
-Go ahead and make this change to your template.yaml and redeploy the application.
+Ve adelante y realiza este cambio en el template.yaml y vuelve a implementar la aplicación.
 
 ```shell
 cd ~/environment/sam-app
 sam build && sam deploy
 ```
 
-Test the endpoint after the deployment is complete to see how the Lambda function still has `dynamodb:Scan` access to the DynamoDB Table.
+Prueba el endpoint después de que se complete el despliegue para ver cómo la función Lambda todavía tiene 
+acceso de `dynamodb:Scan` a la tabla de DynamoDB.
 
 ```shell
 curl -s $ENDPOINT | jq 'sort_by(.id)'
@@ -664,11 +646,12 @@ curl -s $ENDPOINT | jq 'sort_by(.id)'
 ]
 ```
 
-### Expanding an inline policy
+### Expandir una política en línea
 
-You can see how this pattern is easy extend when your functions need specific IAM policies. 
-The example below shows how you could grant `DescribeLogGroups` and `DescribeLogStreams` permissions 
-to your Lambda function. Note the Resource field refers to CloudWatch log groups that start with `/aws/lambda/lambd-`.
+Puedes ver cómo este patrón es fácil de extender cuando tus funciones necesitan políticas IAM específicas. 
+El ejemplo a continuación muestra cómo podrías otorgar permisos de `DescribeLogGroups` y `DescribeLogStreams` a 
+tu función Lambda. Ten en cuenta que el campo de Recurso hace referencia a los grupos de registros de CloudWatch 
+que comienzan con `/aws/lambda/lambd-`.
 
 ```yaml
 getAllItemsFunction:
@@ -694,21 +677,20 @@ getAllItemsFunction:
             Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/lambda-*"
 ```
 
-### Using AWS managed policies
+### Utilizar políticas administradas de AWS
 
-Managed IAM policies are administered by AWS. These policies are generic and convienent, 
-making it simple to grant access to a broad set of resources for common use cases. You can read through 
-the [full list of managed policies on the Reference Guide](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/CloudWatchEventsFullAccess.html). Two specific examples 
-are `AmazonEC2ReadOnlyAccess` and `CloudWatchEventsFullAccess`.
+Las políticas IAM gestionadas son administradas por AWS. Estas políticas son genéricas y cómodas, 
+simplificando la concesión de acceso a un amplio conjunto de recursos para casos de uso comunes. Puede consultar 
+la [lista completa de políticas administradas en la Guía de Referencia](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/CloudWatchEventsFullAccess.html). 
+Dos ejemplos concretos son `AmazonEC2ReadOnlyAccess` y `CloudWatchEventsFullAccess`.
 
-Imagine a Lambda function that needs to read details for all of your EC2 instances. Adding a least privileged 
-inline policy would be tedious if there were dozens (or hundreds!) of EC2 instances. 
-In these cases, adding a managed policy is easy and efficient. Always be aware of your security posture 
-when adding managed policies! You likely wouldn't want to grant `ec2:TerminateInstances` 
-to a Lambda function for all of your instances.
+Imagina una función Lambda que necesita leer detalles de todas tus instancias de EC2. Agregar una política en línea 
+con privilegios mínimos sería tedioso si hubiera docenas (¡o cientos!) de instancias de EC2. En estos casos, agregar 
+una política administrada es fácil y eficiente. ¡Siempre ten en cuenta tu postura de seguridad al añadir políticas administradas! 
+Probablemente no querrías otorgar `ec2:TerminateInstances` a una función Lambda para todas tus instancias.
 
-The example below shows how you can add the `AmazonEC2ReadOnlyAccess` managed policy alongside 
-your inline policy statements to grant EC2 read access to this Lambda function.
+El ejemplo a continuación muestra cómo puedes agregar la política administrada `AmazonEC2ReadOnlyAccess` junto con 
+tus declaraciones de política en línea para otorgar acceso de lectura de EC2 a esta Lambda Function.
 
 ```yaml
   getAllItemsFunction:
@@ -736,50 +718,52 @@ your inline policy statements to grant EC2 read access to this Lambda function.
 
 ```
 
-If you add the `AmazonEC2ReadOnlyAccess` managed policy, navigate to the function's IAM execution role to see it added.
+Si agregas la política administrada `AmazonEC2ReadOnlyAccess`, navega hasta el rol de ejecución IAM de la función para verla agregada.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/connectors/add-aws-managed-policy.png)
 
-You just learned how to add your own IAM Policy Statements to give your Lambda functions access to AWS resouces. 
-You learned how these are different from SAM Policy Templates, and how to use AWS managed policy alongside other policy statements.
+Acabas de aprender cómo agregar tus propias Declaraciones de Política IAM para dar acceso a tus funciones Lambda 
+a los recursos de AWS. Aprendiste cómo estas son diferentes de las Plantillas de Política SAM, y cómo usar la política 
+gestionada de AWS junto con otras declaraciones de política.
 
 ## SAM Connectors
 
-Besides making it easier to create, build, test, and deploy serverless applications, AWS SAM now further simplifies 
-permission management between serverless components with AWS SAM Connectors. SAM Connectors were 
-developed to address the following customer challenges:
+Además de facilitar la creación, construcción, prueba e implementación de aplicaciones serverless, AWS SAM ahora 
+simplifica aún más la gestión de permisos entre los componentes serverless con los Conectores de AWS SAM. 
+Los Conectores SAM fueron desarrollados para abordar los siguientes desafíos de los clientes:
 
-* Not everyone is an IAM expert
-  * Currently, in order to successfully create IAM policies, customers must understand the IAM actions and scopes for all the AWS services they use.
-* Generating well scoped policies is tedious
-  * Creating well scoped policies require multiple iterations of trial and error, leading developers to create overly permissive ones.
-* Application maintenance requires constant IAM policy grooming
-  * Continuous maintenance and development common to serverless applications requires continuous updates to IAM policies, slowing development.
+* No todos son expertos en IAM
+  * Actualmente, para poder crear políticas de IAM con éxito, los clientes deben comprender las acciones y alcances de IAM de todos los servicios de AWS que utilizan.
+* Generar políticas bien definidas es tedioso.
+  * Crear políticas bien delimitadas requiere múltiples iteraciones de prueba y error, lo que lleva a los desarrolladores a crear unas demasiado permisivas.
+* Mantenimiento de la aplicación requiere un constante cuidado de las políticas de IAM.
+  * Mantenimiento continuo y desarrollo común a aplicaciones sin servidor requiere actualizaciones continuas a las políticas IAM, lo que ralentiza el desarrollo.
 
-The goals of SAM Connectors are:
+Los objetivos de los SAM Connectors son:
 
-* Empower the developer to focus on modeling resource relationships, not access permissions
-* Reduce the AWS expertise required to successfully build safe production-ready serverless applications
-* Increase the iteration speed while developing serverless applications
-* Work with existing operational governance controls to reduce friction of getting serverless applications to production
+* Potenciar al desarrollador para que se enfoque en modelar las relaciones de recursos, no en los permisos de acceso.
+* Reducir la experiencia de AWS necesaria para construir con éxito aplicaciones serverless seguras y listas para producción.
+* Aumenta la velocidad de iteración al desarrollar aplicaciones sin servidor
+* Trabajar con los controles de gobierno operativos existentes para reducir la fricción de llevar aplicaciones sin servidor a producción.
 
-AWS SAM Connectors support AWS Step Functions, Amazon DynamoDB, AWS Lambda, Amazon SQS, Amazon SNS, 
-Amazon API Gateway, Amazon EventBridge and Amazon S3, with more resources planned in the future. 
-If you are interested in the complete list of services that SAM Connectors supports visit the [AWS SAM Connector Reference](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/reference-sam-connector.html) 
+Los SAM Connectors son compatibles con AWS Step Functions, Amazon DynamoDB, AWS Lambda, Amazon SQS, Amazon SNS, 
+Amazon API Gateway, Amazon EventBridge y Amazon S3, con más recursos previstos en el futuro. 
+Si está interesado en la lista completa de servicios compatibles con SAM Connectors, visite [AWS SAM Connector Reference](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/reference-sam-connector.html). 
 
-AWS SAM policy templates are an existing feature that helps builders deploy serverless applications with minimally 
-scoped IAM policies. Because there are a finite number of templates, they’re a good fit when a template exists for 
-the services you’re using. Connectors are best for those getting started and who want to focus on modeling the flow 
-of data and events within their applications. Connectors will take the desired relationship model and create 
-the permissions for the relationship to exist and function as intended.
+Las plantillas de políticas de AWS SAM son una característica existente que ayuda a los constructores a implementar 
+aplicaciones serverless con políticas IAM mínimamente detalladas. Dado que hay un número finito de plantillas, son 
+ideales cuando existe una plantilla para los servicios que estás utilizando. Los conectores son los mejores para 
+aquellos que están comenzando y quieren centrarse en modelar el flujo de datos y eventos dentro de sus aplicaciones. 
+Los conectores tomarán el modelo de relación deseado y crearán los permisos para que la relación exista y funcione 
+según lo previsto.
 
-### What are AWS SAM Connectors?
+### ¿Qué son los AWS SAM Connectors?
 
-Connectors are an AWS Serverless Application Model (AWS SAM) abstract resource type, 
-identified as AWS::Serverless::Connector, that provides simple and well-scoped permissions between your serverless 
-application resources. Use the Connectors resource attribute by embedding it within a source resource. 
-Then, define your destination resource and describe how data or events should flow between those resources. 
-AWS SAM then composes the access policies necessary to facilitate the required interactions.
+Los conectores son un tipo de recurso abstracto del Modelo de Aplicación Serverless de AWS (AWS SAM), 
+identificado como `AWS::Serverless::Connector`, que proporciona permisos simples y bien delimitados entre los recursos 
+de tu aplicación serverless. Utiliza el atributo de recurso Connectors incrustándolo dentro de un recurso fuente. 
+Luego, define tu recurso de destino y describe cómo deben fluir los datos o eventos entre esos recursos. 
+Luego, AWS SAM compone las políticas de acceso necesarias para facilitar las interacciones requeridas.
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
@@ -799,11 +783,11 @@ Resources:
   ...
 ```
 
-Let's modify our application to use AWS SAM Connectors to maintain secure best practices.
+Vamos a modificar nuestra aplicación para utilizar AWS SAM Connectors y mantener las mejores prácticas de seguridad.
 
-For each of the three Lambda functions, remove the `Policies` attribute (under the `Properties` attribute) and 
-add a `Connectors` attribute as shown in the highlighted lines blow. In each of the connectors, 
-note that the destination is the DynamoDB table `SampleTable`.
+Para cada una de las tres funciones Lambda, eliminar el atributo `Policies` (bajo el atributo `Properties`) y 
+agregar un atributo `Connectors` como se muestra en las líneas resaltadas a continuación. En cada uno de los conectores, 
+señalar que el destino es la tabla DynamoDB `SampleTable`.
 
 ```yaml
 Resources:
@@ -902,18 +886,18 @@ Resources:
             Method: POST
 ```
 
-Let's deploy the application with these changes.
+Despleguemos la aplicación con estos cambios.
 
 ```shell
 cd ~/environment/sam-app
 sam build && sam deploy --no-confirm-changeset
 ```
 
-Test the `getAllItems` API and you should see the same familiar output.
+Prueba el API `getAllItems` y deberías ver la misma salida familiar.
 
 ```shell
 curl -s $ENDPOINT | jq
 ```
 
-Congradulations! That concludes our look at AWS SAM Connectors and the AWS SAM Permissions module.
+¡Felicidades! Eso concluye nuestro vistazo a los Conectores de AWS SAM y al módulo de Permisos de AWS SAM.
 

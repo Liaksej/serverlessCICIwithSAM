@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Prácticas de trabajo con SAM" id="Practicas_de_trabajo_con_SAM">
+
+    <section-starting-page>
+        <title>Prácticas de trabajo con SAM</title>
+        <description>Fundamentos de trabajar con SAM y algunas sutilezas importantes</description>
+    <misc>
+        <cards narrow="false">
+            <a href="Que_es_SAM.md" description="Qué es SAM">Qué es SAM</a>
+            <a href="Configuracion_del_proyecto_con_SAM.md" description="Configuración del proyecto con SAM">Configuración del proyecto con SAM</a>
+            <a href="Aspectos_generales_características_y_ejemplos_de_Plantilla_SAM.md" description="Aspectos generales, características y ejemplos de Plantilla SAM">Aspectos generales, características y ejemplos de Plantilla SAM</a>
+            <a href="Aspecto_general_de_la_estructura_de_carpetas_para_el_proyecto_SAM.md" description="Aspecto general de la estructura de carpetas para el proyecto SAM">Aspecto general de la estructura de carpetas para el proyecto SAM</a>
+            <a href="Características-de-configuración-al-usar-TypeScript-en-proyectos-con-SAM.md" description="Características de configuración al usar TypeScript en proyectos con SAM">Características de configuración al usar TypeScript en proyectos con SAM</a>
+            <a href="Construccion-de-Lambda-Layers-en-AWS-SAM.md" description="Construcción de Lambda Layers en AWS SAM">Construcción de Lambda Layers en AWS SAM</a>
+            <a href="Prueba-local-de-funciones-Lambda.md" description="Prueba local de funciones Lambda">Prueba local de funciones Lambda</a>
+            <a href="Despliegue_manual_con_SAM.md" description="Despliegue manual con SAM">Despliegue manual con SAM</a>
+            <a href="Elimitar-aplicación-desplegada.md" description="Eliminar la aplicación desplegada">Eliminar la aplicación desplegada</a>
+        </cards>
+    </misc>
+</section-starting-page>
+</topic>

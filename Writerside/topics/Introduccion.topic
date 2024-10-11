@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Introducción" id="Introduccion" help-id="Empty-XML-Topic">
+    <section-starting-page><title>Introducción</title>
+        <description>Como construir serverless CI/CD con SAM</description>
+        <spotlight>
+            <a href="Propositos-y-objetidov.md">Propósitos y objetivos</a>
+            <a href="Que_significa_un_buen_pipeline_CICD.md">Qué significa un buen pipeline CI/CD?</a>
+        </spotlight>
+    </section-starting-page>
+</topic>

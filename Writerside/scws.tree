@@ -4,31 +4,29 @@
 
 <instance-profile id="scws"
                  name="Serverless CI/CD with SAM"
-                 start-page="Introduction.md">
+                 start-page="Introduccion.topic">
 
-    <toc-element topic="Introduction.md">
+    <toc-element topic="Introduccion.topic">
         <toc-element topic="Propositos-y-objetidov.md"/>
-        <toc-element topic="What-is-the-good-pipeline-means.md"/>
+        <toc-element topic="Que_significa_un_buen_pipeline_CICD.md"/>
     </toc-element>
-    <toc-element topic="Предварительные-требования.md"/>
-    <toc-element topic="Настройка-проекта-AWS-SAM.md">
-        <toc-element topic="Что-такое-SAM.md"/>
-        <toc-element topic="Конфигурация-проекта-с-SAM.md"/>
-        <toc-element topic="Общий-вид-особенности-и-примеры-SAM-Template.md"/>
-        <toc-element topic="Общий-вид-структуры-папок-для-проекта-SAM.md"/>
-        <toc-element topic="Building-Node-js-Lambda-functions-with-SAM.md"/>
-        <toc-element topic="Building-Lambda-layers-in-AWS-SAM.md"/>
+    <toc-element topic="Requisitos-previos.md"/>
+    <toc-element topic="Practicas_de_trabajo_con_SAM.topic">
+        <toc-element topic="Que_es_SAM.md"/>
+        <toc-element topic="Configuracion_del_proyecto_con_SAM.md"/>
+        <toc-element topic="Aspectos_generales_características_y_ejemplos_de_Plantilla_SAM.md"/>
+        <toc-element topic="Aspecto_general_de_la_estructura_de_carpetas_para_el_proyecto_SAM.md"/>
+        <toc-element topic="Características-de-configuración-al-usar-TypeScript-en-proyectos-con-SAM.md"/>
+        <toc-element topic="Construccion-de-Lambda-Layers-en-AWS-SAM.md"/>
         <toc-element topic="Prueba-local-de-funciones-Lambda.md"/>
-        <toc-element topic="Iniciar-API-local.md"/>
+        <toc-element topic="Despliegue_manual_con_SAM.md"/>
         <toc-element topic="Managing-IAM-Roles-with-SAM.md"/>
+        <toc-element topic="Elimitar-aplicación-desplegada.md"/>
     </toc-element>
-    <toc-element topic="Создание-пайплайна-CI-CD.md">
-        <toc-element topic="Создание-CI-CD-пайплайна-с-помощью-SAM.md"/>
-        <toc-element topic="Структура-проекта-и-файлов-отвчающих-за-работу-pipeline.md"/>
-        <toc-element topic="Конфигурация-CI-CD-пайплайна-для-работы-с-SAM.md"/>
-        <toc-element topic="Настройка-Canary-и-Linear-deployment-с-SAM.md"/>
+    <toc-element topic="Constriccion-de-flujos-de-trabajo-CICD-para-proyectos-serverless-con-SAM.md">
+        <toc-element topic="Creacion-del-flujo-de-trabajo-CI-CD-con-SAM.md"/>
+        <toc-element topic="Configuracion-de-Canary-y-Lineal-despliegue-con-SAM.md"/>
     </toc-element>
-    <toc-element topic="10-Заключение.md"/>
-    <toc-element topic="Дополнительные-материалы.md"/>
-    <toc-element topic="Default-topic.md"/>
+    <toc-element topic="Conclusion.md"/>
+    <toc-element topic="Materiales-adicionales.md"/>
 </instance-profile>
