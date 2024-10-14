@@ -548,7 +548,7 @@ a recursos específicos de AWS sin necesidad de escribir manualmente políticas 
 
 ## Políticas en línea y administradas
 
-En el apartado anterior aprendiste que las plantillas de políticas SAM son una forma sencilla de conceder acceso
+En [el apartado anterior](Aspectos_generales_características_y_ejemplos_de_Plantilla_SAM.md) aprendiste que las plantillas de políticas SAM son una forma sencilla de conceder acceso
 a diferentes recursos de AWS desde tus funciones Lambda. Por muy útiles y fáciles que sean, a veces puede que necesites
 ser más específico en la forma de gestionar el acceso IAM. En otras circunstancias puede que no haya una plantilla
 de política que se ajuste a lo que necesitas. También podría haber
@@ -561,7 +561,7 @@ cómo agregar tus propias políticas de bajo nivel y políticas administradas po
 
 ### Crear una Política en línea
 
-En el apartado anterior, usaste la plantilla de política SAM `DynamoDBCrudPolicy` para otorgar acceso CRUD a una tabla
+En [el apartado anterior](Despliegue_manual_con_SAM.md), usaste la plantilla de política SAM `DynamoDBCrudPolicy` para otorgar acceso CRUD a una tabla
 de DynamoDB.
 
 ```yaml

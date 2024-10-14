@@ -192,4 +192,4 @@ Encontrará información detallada sobre la configuración almacenada en [aquí]
 ### `template.yaml`
 
 Es la **Plantilla SAM**, que contiene configuraciones para todos los recursos del proyecto. Es de vital importancia para el proyecto.
-La consideramos en la sección anterior.
+La consideramos en [el capítulo anterior](Aspectos_generales_características_y_ejemplos_de_Plantilla_SAM.md).

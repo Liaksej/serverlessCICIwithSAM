@@ -207,7 +207,7 @@ image_repositories = []
 
 ## Inspeccionando el despliegue
 
-En la sección anterior, desplegamos y probamos nuestra aplicación sin servidor. Si eres nuevo en AWS SAM, 
+En [el capítulo anterior](Prueba-local-de-funciones-Lambda.md), desplegamos y probamos nuestra aplicación sin servidor. Si eres nuevo en AWS SAM, 
 es bueno entender cómo crea recursos con CloudFormation.
 
 ### Abra la consola de CloudFormation
@@ -234,7 +234,7 @@ Outputs:
     Value: !GetAtt HelloWorldFunctionRole.Arn
 ```
 
-Puedes ver en la sección anterior cómo los valores de estas variables se emiten a la consola durante el despliegue. 
+Puedes ver en [el capítulo anterior](Aspectos_generales_características_y_ejemplos_de_Plantilla_SAM.md) cómo los valores de estas variables se emiten a la consola durante el despliegue. 
 Es útil reconocer que se trata de [CloudFormation Outputs estándar](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html).
 
 Puedes ver estos valores de **Outputs** en la consola de CloudFormation. Haz clic en la pila `sam-app` y luego vete 

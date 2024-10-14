@@ -1,13 +1,13 @@
-# Configuración de Canary y Lineal despliegue con SAM
+# Configuración de despliegue Canary y Lineal
 
-El cambio de tráfico con aliases de Lambda Function está directamente integrado en AWS SAM. Si desea utilizar despliegues 
-all-at-once, canary o lineales con tus Lambda Functions, puedes incorporarlo directamente en sus plantillas de AWS SAM. 
+El cambio de tráfico con aliases de Lambda Function está directamente integrado en AWS SAM. Si deseas utilizar despliegues 
+**all-at-once**, **canary** o **lineales** con tus Lambda Functions, puedes incorporarlo directamente en tus plantillas de AWS SAM. 
 Puede hacerlo en la sección de preferencias de despliegue de la plantilla. AWS CodeDeploy utiliza la sección de 
 preferencias de despliegue para gestionar la implementación de funciones como parte de la actualización del stack de 
-AWS CloudFormation. SAM tiene varias preferencias de despliegue preconstruidas que puede utilizar para implementar el código. 
+AWS CloudFormation. SAM tiene varias preferencias de despliegue preconfiguradas que se puede utilizar para implementar el código. 
 Consulta la siguiente tabla para ver ejemplos. 
 
-| Deployment Preferences Type   | Description                                                                                                     |
+| Tipo de deployment            | Descripción                                                                                                     |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | Canary10Percent30Minutes      | Desplaza el 10% del tráfico en el primer incremento. El 90 por ciento restante se despliega 30 minutos después. |
 | Canary10Percent5Minutes       | Desplaza el 10% del tráfico en el primer incremento. El 90 por ciento restante se despliega 5 minutos después.  |
@@ -32,35 +32,35 @@ el despliegue).
 
 ## Como funciona Canary
 
-> **Nota**
+> **Nota**  
 [Despliegue gradual con Canary](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/automating-updates-to-serverless-apps.html) 
 > es una característica nativa de SAM y no requiere un proceso CI/CD. Este módulo muestra capturas de pantalla de la canalización CI/CD 
 > creado en el módulo CodePipeline. Si no ha creado un CodePipeline todavía puede trabajar a través de este módulo. 
 > Sepa que aún puede ver el estado del despliegue en AWS CodeDeploy, pero no tendrá una canalización que inspeccionar.
 
-Antes de sumergirnos en la implementación, primero entendamos cómo funcionan los Despliegues Canary:
+Antes de sumergirnos en la implementación, primero entendamos cómo funcionan los despliegues Canary:
 
-Los conceptos de despliegues azul/verde y canario llevan un tiempo entre nosotros y se han establecido como buenas 
+Los conceptos de despliegues _blue/green_ y _canary_ llevan un tiempo entre nosotros y se han establecido como buenas 
 prácticas para reducir el riesgo de despliegues de software. En las aplicaciones tradicionales, actualizas lentamente 
 y de forma incremental los servidores en tu flota mientras verificas simultáneamente la salud de la aplicación. 
-Sin embargo, hay cierta falta de coincidencia al mapear estos conceptos a un mundo sin servidores. 
+Sin embargo, hay cierta falta de coincidencia al mapear estos conceptos a un mundo _serverless_. 
 No puedes desplegar incrementalmente tu software a través de una flota de servidores cuando no hay servidores.
 
-Por fortuna, existen varios **servicios** y **funcionalidades** involucrados para hacer posible esto al operar cargas 
-de trabajo **serverless**.
+Por fortuna, existen varios servicios y funcionalidades involucrados para hacer posible esto al operar cargas 
+de trabajo _serverless_.
 
-### Versiones y alias de Lambda
+### Versiones y aliases de Lambda
 
 AWS Lambda te permite publicar varias versiones de la misma función. Cada versión tiene su propio código y dependencias 
 asociadas, así como su propia configuración de función (como asignación de memoria, tiempo de espera y variables de 
 entorno). Puedes hacer referencia a una versión específica utilizando un alias de Lambda. Un alias no es más que 
 un nombre que puede apuntar a una versión dada de una función de Lambda.
 
-1[image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/lambda-versions-aliases.png)
+![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/lambda-versions-aliases.png)
 
 ### Redirección de tráfico con alias de Lambda
 
-Con la introducción de **tráfico de alias**, ahora es posible implementar fácilmente despliegues **canarios** de funciones 
+Con la introducción de tráfico de alias, ahora es posible implementar fácilmente despliegues _Canary_ de funciones 
 Lambda. Al actualizar pesos adicionales de versión en un alias, el tráfico de invocación se dirige a las nuevas versiones 
 de las funciones basado en el peso especificado. Se pueden analizar métricas detalladas de CloudWatch para el alias 
 y la versión durante el despliegue, o realizar otros controles de salud, para asegurarse de que la nueva versión 
@@ -68,7 +68,7 @@ es saludable antes de proceder.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/traffic-shifting.png)
 
-### Reenvío de tráfico con SAM y CodeDeploy
+### Reenvío de tráfico con SAM y AWS CodeDeploy
 
 AWS CodeDeploy proporciona una implementación llave en mano intuitiva de esta funcionalidad integrada directamente 
 en AWS SAM. Los despliegues con cambio de tráfico se pueden declarar en una plantilla SAM y CodeDeploy gestiona 
@@ -113,7 +113,7 @@ personalizadas definidas en un archivo de configuración para validar en contra 
 
 ### Aplicar los cambios
 
-En la terminal, ejecuta los siguientes comandos desde el directorio raíz de tu proyecto 'sam-app'.
+En la terminal, ejecuta los siguientes comandos desde el directorio raíz de tu proyecto `sam-app`.
 
 ```shell
 git add .
@@ -121,9 +121,9 @@ git commit -m "Add Canary deployment configuration to SAM"
 git push
 ```
 
-## Despliegue gradualmente una actualización
+## Despliegue gradualmente la actualización
 
-Nuestro pipeline está configurado para implementar código nuevo utilizando la estrategia de Canary al 10 por ciento 
+Nuestro pipeline está configurado para implementar código nuevo utilizando la estrategia de _Canary_ al 10 por ciento 
 durante 5 minutos. Para ver esto en acción, necesitamos actualizar nuestra aplicación.
 
 ### Realizamos un cambio de código
@@ -131,7 +131,7 @@ durante 5 minutos. Para ver esto en acción, necesitamos actualizar nuestra apli
 AWS SAM no desplegará nada cuando su código no haya cambiado. Dado que nuestro canal está utilizando AWS SAM como 
 la herramienta de despliegue, necesitamos realizar algunos cambios en la aplicación.
 
-Cambia el mensaje en el código de respuesta de tu función Lambda 'I'm using canary deployments'. Recuerda actualizar 
+Cambia el mensaje en el código de respuesta de tu función Lambda `I'm using canary deployments`. Recuerda actualizar 
 las pruebas unitarias.
 
 `~/sam-app/hello-world/app.js`
@@ -164,7 +164,7 @@ describe("Tests index", function () {
 })
 ```
 
-### Haz push del código
+### Haz _push_ del código
 
 ```shell
 git add .
@@ -172,14 +172,14 @@ git commit -m "Changed return message"
 git push
 ```
 
-### Observa el despiegue Canary
+### Observa el despiegue _Canary_
 
-Tomará unos minutos para que su canalización llegue a la etapa `DeployTest` que iniciará la implementación canario 
-de la etapa que usted llamó `sam-app-dev`.
+Tomará unos minutos para que tu pipeline llegue a la etapa `DeployTest` que iniciará la implementación _Canary_ 
+de la etapa que tu llamó `sam-app-dev`.
 
-Comencemos un observador que imprime el mensaje de su API cada segundo y le ayuda a notar cuándo comienzan y terminan 
-los cambios de tráfico. Golpee el punto final de la API de desarrollo cada segundo con curl e imprima el valor de 
-retorno en la pantalla. Este comando también añade la salida al archivo outputs.txt que puede revisar más tarde. 
+Comencemos un observador que imprime el mensaje de su API cada segundo y te ayuda a notar cuándo comienzan y terminan 
+los cambios de tráfico. Consulta el punto final de la API de desarrollo cada segundo con `curl` e imprima el valor de 
+retorno en la pantalla. Este comando también añade la salida al archivo `outputs.txt` que puedes revisar más tarde. 
 Puede ejecutar este comando desde cualquier directorio.
 
 ```shell
@@ -188,25 +188,25 @@ watch -n 1 "curl -s $DEV_ENDPOINT | jq '.message' 2>&1 | tee -a outputs.txt"
 
 Deberías ver `Hello my friend` en la terminal.
 
-Si ha completado el [módulo CI/CD con CodePipeline](), dirija su atención a la consola de CodePipeline. Espere a que su 
-pipeline llegue a la etapa DeployTest. Una vez que vea que la etapa se vuelve azul con el estado En progreso, navegue a la consola CodeDeploy. 
-Si no desplegó una piplina CI/CD, mire la consola CodeDeploy.
+Si ha completado el [módulo CI/CD con CodePipeline](), dirige tu atención a la consola de CodePipeline. Espera a que tu 
+pipeline llegue a la etapa DeployTest. Una vez que vea que la etapa se vuelve azul con el estado En progreso, navega a la consola CodeDeploy. 
+Si no desplegó un pipeline CI/CD, mira la consola CodeDeploy.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/screenshot-canary-codedeploy-00.png)
 
-En la consola de CodeDeploy, haz clic en Deployments. Deberías ver tu despliegue En progreso. 
+En la consola de CodeDeploy, haz clic en Deployments. Deberías ver tu despliegue _En progreso_. 
 Si no ves un despliegue, haz clic en el ícono de actualización. ¡Esto puede tardar unos minutos en aparecer! 
 Haz clic en el Id. de Despliegue para ver los detalles.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/screenshot-canary-codedeploy-0.png)
 
-El estado de despliegue muestra que el 10% del tráfico se ha desplazado a la nueva versión (el Canary). 
+El estado de despliegue muestra que el 10% del tráfico se ha desplazado a la nueva versión (el _Canary_). 
 CodeDeploy retendrá el porcentaje restante hasta que haya transcurrido el intervalo de tiempo especificado. 
 En este caso, especificamos que el intervalo sea de 5 minutos.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/screenshot-canary-codedeploy-1.png)
 
-Cuando te encuentres en esta etapa, echa un vistazo a tu terminal donde iniciaste el comando `watch`. 
+Cuando te encuentras en esta etapa, echa un vistazo a tu terminal donde iniciaste el comando `watch`. 
 Verás el mensaje aparecer ocasionalmente como `I'm using canary deployments`.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/code-pipeline-canary.gif)
@@ -234,19 +234,19 @@ Puedes ver también la secuencia de valores de retorno al abrir `outputs.txt`.
 cat outputs.txt
 ```
 
-## Monitorear la salud del despliegue Canary
+## Monitorear la salud del despliegue _Canary_
 
-El despliegue Canary es considerablemente más exitosa si el código está siendo monitoreado durante la implementación. 
+El despliegue _Canary_ es considerablemente más exitosa si el código está siendo monitoreado durante la implementación. 
 Puedes configurar CodeDeploy para retroceder automáticamente la implementación si una métrica especificada de CloudWatch 
 ha superado un umbral. Métricas comunes para monitorear son los errores de Invocación de Lambda o la Duración de 
 la Invocación (latencia), por ejemplo.
 
 ### Definimos una Alarma de CloudWatch
 
-Agregue la siguiente definición de ***alarma*** al archivo `template.yaml` en la sección de Recursos después de 
+Agrega la siguiente definición de **alarma** al archivo `template.yaml` en la sección de Recursos después de 
 la definición de `HelloWorldFunction`.
 
-Este bloque define una Alarma de Amazon CloudWatch. La alarma se activa cuando la función Lambda arroja errores. 
+Este bloque define una _Alarma de CloudWatch_. La alarma se activa cuando la función Lambda arroja errores. 
 El umbral de la alarma se alcanza cuando hay uno o más errores en un minuto dado, durante dos minutos consecutivos.
 
 ```yaml
@@ -270,12 +270,12 @@ CanaryErrorsAlarm:
         Value: !GetAtt HelloWorldFunction.Version.Version
 ```
 
-### Habilitamos canario y alarma para producción
+### Habilitamos _Canary_ y alarma para producción
 
-Las alarmas y los canarios son excelentes para nuestra implementación en producción. Puede que no quiera o necesite 
-usar despliegues canarios para entornos no productivos. Utilizar una estrategia `AllAtOnce` para nuestra etapa de 
-desarrollo hará que las implementaciones sean más rápidas. Configuremos nuestra aplicación sin servidor para utilizar 
-un despliegue canario y la nueva alarma de CloudWatch solo para la etapa `sam-app-prod` utilizando una `Condición` 
+Las alarmas y el _Canary_ son excelentes para nuestra implementación en producción. Puede que no quieras o necesitas 
+usar despliegues _Canary_ para entornos no productivos. Utilizar una estrategia `AllAtOnce` para nuestra etapa de 
+desarrollo hará que las implementaciones sean más rápidas. Configuremos nuestra aplicación _serverless_ para utilizar 
+un despliegue _Canary_ y la nueva alarma de CloudWatch solo para la etapa `sam-app-prod` utilizando una `Condición` 
 de CloudFormation.
 
 Primero, creamos una declaración de Condición de `IsProduction` después de la sección de `Globals` cerca 
@@ -357,8 +357,8 @@ Outputs:
 
 ## Introducimos un error
 
-El monitoreo de la salud de su canario permite a CodeDeploy tomar la decisión de si se necesita hacer un rollback. 
-Si nuestra Alarma CloudWatch llega al estado de ALARM, CodeDeploy realizará automáticamente el rollback del despliegue.
+El monitoreo de la salud de tu _Canary_ permite a CodeDeploy tomar la decisión de si se necesita hacer un rollback. 
+Si nuestra Alarma CloudWatch llega al estado de _ALARM_, CodeDeploy realizará automáticamente el rollback del despliegue.
 
 ### Introducimos un error a propósito
 
@@ -435,7 +435,7 @@ export PROD_ENDPOINT=$(aws cloudformation describe-stacks --stack-name sam-app-p
 echo "$PROD_ENDPOINT"
 ```
 
-Inicie un comando de `watch` que golpeará este punto final dos veces por segundo.
+Inicia un comando `watch` que consulta este punto final dos veces por segundo.
 
 ```shell
 watch -n 0.5 "curl -s $PROD_ENDPOINT"
@@ -443,26 +443,25 @@ watch -n 0.5 "curl -s $PROD_ENDPOINT"
 
 ## Monitorizando de rollback
 
-_Si ha creado un canal CI/CD_, navegue a su canal en la consola de CodePipeline y vigile su progresión. 
-su progresión. Verás que la etapa `DeployTest` se despliega rápidamente ya que utiliza la estrategia `AllAtOnce`. 
+_Si has creado un pipeline CI/CD_, navega a tu pipeline en la consola de CodePipeline y vigila tu progresión. Verás que la etapa `DeployTest` se despliega rápidamente ya que utiliza la estrategia `AllAtOnce`. 
 A pesar de que nuestro código está roto, gracias a nuestro error codificado, se despliega automáticamente en la etapa `DeployTest`.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/canary-deployment-dev-success.png)
 
-Una vez que tu canalización avanza a la etapa `DeployProd`, las cosas se vuelven más interesantes. En la ventana 
+Una vez que tu pipeline avanza a la etapa `DeployProd`, las cosas se vuelven más interesantes. En la ventana 
 del terminal donde estás ejecutando el comando `watch`, notarás que el mensaje cambia rápidamente de 
 `'I'm using canary deployments'` a `Internal server error`.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/code-pipeline-errors.gif)
 
-Después de unos minutos, verá que CodeDeploy marca este despliegue como fallido y vuelve a la versión anterior. 
+Después de unos minutos, verás que CodeDeploy marca este despliegue como fallido y vuelve a la versión anterior. 
 Los mensajes de error de servidor interno desaparecerán cuando todo el tráfico vuelva a la versión anterior.
 
 ![image](https://static.us-east-1.prod.workshops.aws/public/1d9be5f3-006d-47cd-bd23-bdc7436c4fb0/static/canaries/canary-deployment-prod-rollback.png)
 
 Navegate a la página [AWS CodeDeploy Console](https://console.aws.amazon.com/codedeploy/home). 
 Mira la implementación, que puede estar en curso o detenida, dependiendo de si se ha completado la reversión. 
-Haz clic en el Id. del despliegue para ver sus detalles.
+Haz clic en el _Id_ del despliegue para ver sus detalles.
 
 Verás que CodeDeploy detectó que `CanaryErrorsAlarm` se ha activado y detuvo el despliegue.
 

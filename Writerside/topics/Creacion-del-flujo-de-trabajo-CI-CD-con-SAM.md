@@ -1,11 +1,11 @@
-# Creación del flujo de trabajo CI/CD con SAM
+# Creación del flujo de trabajo CI/CD
 
-En este capítulo, vamos a utilizar una característica de SAM llamada [SAM Pipelines](https://aws.amazon.com/blogs/compute/introducing-aws-sam-pipelines-automatically-generate-deployment-pipelines-for-serverless-applications/). 
+En este capítulo, vamos a utilizar [SAM Pipelines](https://aws.amazon.com/blogs/compute/introducing-aws-sam-pipelines-automatically-generate-deployment-pipelines-for-serverless-applications/) de que hemos hablado en el [capítulo anterior](Construccion-de-Lambda-Layers-en-AWS-SAM.md). 
 Cuando estés listo para desplegar tu aplicación serverless de forma automatizada, puedes generar un pipeline de despliegue 
-para el sistema CI/CD de su elección. AWS SAM proporciona un conjunto de plantillas de canalizaciones de inicio con las que puede generar 
+para el sistema CI/CD de tu elección. AWS SAM proporciona un conjunto de plantillas de canalizaciones de inicio con las que puede generar 
 canalizaciones en cuestión de minutos mediante el comando sam pipeline init.
 
-Actualmente, AWS SAM CLI admite generar configuraciones iniciales de canalización CI/CD para los siguientes proveedores:
+Actualmente, AWS SAM CLI admite generar configuraciones iniciales de pipeline CI/CD para los siguientes proveedores:
 
 * [AWS CodePipeline](https://aws.amazon.com/codepipeline/) 
 * [Jenkins](https://www.jenkins.io/) 
@@ -19,55 +19,55 @@ Actualmente, AWS SAM CLI admite generar configuraciones iniciales de canalizaci�
 
 Prerrequisitos
 
-* [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html), last version
-* [Git client](https://git-scm.com/downloads)
-* IAM Role like describen in [Reqisitos previos](Requisitos-previos.md).
-* [Bitbucket](https://bitbucket.org) account
+* [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html), última versión
+* Cliente [Git](https://git-scm.com/downloads)
+* IAM Role como se describe en [Reqisitos previos](Requisitos-previos.md).
+* Cuenta [Bitbucket](https://bitbucket.org)
 
-### Create a Git Repository
+### Crear un Repositorio Git
 
-Any CI/CD pipeline starts with a code repository. In this module, we use Bitbucket.
+Cualquier pipeline de CI/CD comienza con un repositorio de código. En este módulo, usamos Bitbucket.
 
 Por favor, inicia sesión con tu cuenta existente de Bitbucket y crea un repositorio llamado `sam-app`.
 
-La visibilidad del **repositorio** (público o privado) no importa para este taller.
+La visibilidad del repositorio (público o privado) no importa para este taller.
 
 ### Subir el código
 
 Agrega la URL de tu repositorio de Bitbucket como un remoto en tu proyecto git local.
 
-## Cómo construir un pipeline
+## ¿Cómo construir un pipeline?
 
-La mejor manera de automatizar la creación de tuberías de CI/CD es aprovisionándolas programáticamente utilizando 
-Infraestructura como Código (IaC). Esto es útil en un entorno de microservicios donde puedes tener una tubería por 
-servicio. En tales entornos, podría haber docenas o incluso cientos de tuberías de CI/CD. Contar con una forma 
+La mejor manera de automatizar la creación de pipelines CI/CD es aprovisionándolas programáticamente utilizando 
+Infraestructura como Código (IaC). Esto es útil en un entorno de microservicios donde puedes tener una pipeline por 
+servicio. En tales entornos, podría haber docenas o incluso cientos de pipelines CI/CD. Contar con una forma 
 automatizada de crear esas tuberías de CI/CD permite a los desarrolladores avanzar rápidamente sin la carga 
 de construirlas manualmente. SAM Pipelines, que estarás utilizando, es una herramienta para aliviar esa carga.
 
 ### Diferentes formas de crear infraestructura en la nube
 
-Los equipos técnicos utilizan diferentes herramientas y marcos de trabajo de IaC para crear recursos en 
-la nube de forma programática. A continuación se enumeran algunas opciones.
+Los equipos técnicos utilizan diferentes herramientas y frameworks de IaC para crear recursos en 
+la nube de forma programática. A continuación se enumeran algunas opciones:
 
 * [AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html)
 * [AWS CloudFormation](https://docs.aws.amazon.com/codepipeline/latest/userguide/tutorials.html) 
 * [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/codepipeline_example.html) 
 * [Terraform](https://www.terraform.io/docs/providers/aws/r/codepipeline.html) 
 
-En este taller, estamos utilizando AWS SAM, exclusivamente. Vale la pena aclarar las diferencias entre AWS SAM y 
+En la documentación, estamos utilizando AWS SAM, exclusivamente. Vale la pena aclarar las diferencias entre AWS SAM y 
 CloudFormation, si no estás familiarizado. Puede ser útil pensar en SAM como un lenguaje de programación de un 
-nivel más alto como C o C++, y CloudFormation como lenguaje ensamblador. Realizamos nuestro trabajo en AWS SAM, 
-que genera e implementa plantillas de CloudFormation en nuestro nombre. En secciones anteriores, usamos comandos 
-locales de sam para probar nuestra aplicación sin servidor de forma local. AWS SAM es un conjunto de herramientas 
+nivel más alto como C o C++, y CloudFormation como lenguaje assembler. Realizamos nuestro trabajo en AWS SAM, 
+que genera e implementa plantillas de CloudFormation en nuestro nombre. En los [capítulos anteriores](Practicas_de_trabajo_con_SAM.topic), usamos comandos 
+locales de SAM para probar nuestra aplicación _serverless_ de forma local. AWS SAM es un conjunto de herramientas 
 destinado a aumentar la productividad al desarrollar aplicaciones sin servidor y ofrece funciones como sam local que 
 no están presentes en otras herramientas de IaC.
 
 ## Presentación de AWS SAM Pipelines
 
-[SAM Pipelines](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-pipeline-bootstrap.html) funcionan creando un conjunto de archivos de configuración e infraestructura que usted utiliza 
-para crear y gestionar su canalización CI/CD.
+[SAM Pipelines](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-pipeline-bootstrap.html) funcionan creando un conjunto de archivos de configuración e infraestructura que se utiliza 
+para crear y gestionar pipelines CI/CD.
 
-A partir de esta redacción, las SAM Pipelines pueden iniciar las pipelines CI/CD para los siguientes proveedores:
+A partir de esta redacción, SAM Pipelines pueden iniciar los pipelines CI/CD para los siguientes proveedores:
 
 * [AWS CodePipeline](https://aws.amazon.com/codepipeline/) 
 * [Jenkins](https://www.jenkins.io/) 
@@ -75,16 +75,16 @@ A partir de esta redacción, las SAM Pipelines pueden iniciar las pipelines CI/C
 * [GitHub Actions](https://github.com/features/actions) 
 * [Bitbucket Pipelines](https://support.atlassian.com/bitbucket-cloud/docs/get-started-with-bitbucket-pipelines/)
 
-> Las SAM Pipelines es una feature que inicia las pipelines CI/CD para los proveedores listados.
+> [SAM Pipelines](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-pipeline-bootstrap.html) es una feature que inicia los pipelines CI/CD para los proveedores listados.
 > Esto se ahorra el trabajo de configurarlas desde cero. Sin embargo, se puede usar SAM como una herramienta de implementación con cualquier
-> proveedor de CI/CD. Utilizas varios comandos de sam para construir e implementar aplicaciones SAM, independientemente del conjunto de herramientas de CI/CD.
+> proveedor de CI/CD. Utilizas varios comandos de SAM para construir e implementar aplicaciones SAM, independientemente del conjunto de herramientas de CI/CD.
 > Además, las configuraciones que crea SAM Pipelines son una conveniencia para empezar. Eres libre de editar estos
 > archivos de configuración CI/CD después de que SAM los haya creado.
 
-SAM Pipelines crea archivos de configuración apropiados para su proveedor de CI/CD elegido. Por ejemplo, al usar 
-AWS CodePipeline, SAM sintetizará un archivo `codepipeline.yaml` y la carpeta `pipeline` con archivos 
-`buildspec*.yml`. Esos archivos definen su canalización de CI/CD utilizando AWS CodePipeline, AWS CodeBuild, 
-AWS CodeDeploy.
+SAM Pipelines crea archivos de configuración apropiados para el proveedor de CI/CD elegido. Por ejemplo, al usar 
+[AWS CodePipeline](https://aws.amazon.com/codepipeline/), SAM sintetizará un archivo `codepipeline.yaml` y la carpeta `pipeline` con archivos 
+`buildspec*.yml`. Esos archivos definen el pipeline de CI/CD utilizando [AWS CodePipeline](https://aws.amazon.com/codepipeline/), [AWS CodeBuild](https://aws.amazon.com/codebuild/), 
+[AWS CodeDeploy](https://aws.amazon.com/codedeploy/).
 
 ### Arquitectura de AWS CodePipeline
 
@@ -94,22 +94,22 @@ AWS CodePipeline y que llevará a cabo los siguientes pasos.
 1. Desencadenar después de un envío a la rama principal (en: `push` en la captura de pantalla de abajo)
 2. Ejecutar pruebas unitarias a través de AWS CodeBuild
 3. Construir y empaquetar el código de la aplicación a través de AWS CodeBuild
-4. Despliegue a un entorno de desarrollo/pruebas a través de AWS CodeDeploy.
+4. Despliegue a un entorno de desarrollo/pruebas a través de AWS CodeDeploy
 5. Prueba de integración
-6. Desplegar a un entorno de producción a través de AWS CodeDeploy.
+6. Desplegar a un entorno de producción a través de AWS CodeDeploy
 
 ![s3orphans-Pipeline.jpg](s3orphans-Pipeline.jpg)
 
 ## Generar un pipeline inicial para AWS CodePipeline en AWS SAM
 
-Para generar una configuración inicial de tuberías para AWS CodePipeline, realiza las siguientes tareas en este orden:
+Para generar una configuración inicial de un pipeline para AWS CodePipeline, hay que realizar las tareas en el siguiente orden:
 
-1. Crear recursos de infraestructura.
-2. Crear la configuración del flujo de trabajo.
-3. Guardar la configuración de pipeline a Git.
-4. Conectar el repositorio Git con el sistema CI/CD.
+1. Crear recursos de infraestructura
+2. Crear la configuración del flujo de trabajo
+3. Guardar la configuración de pipeline a Git
+4. Conectar el repositorio Git con el sistema CI/CD
 
-> **Nota**
+> **Nota**  
 > El siguiente procedimiento utiliza dos comandos de AWS SAM CLI, `sam pipeline bootstrap` y `sam pipeline init`. 
 > La razón por la que hay dos comandos es para manejar el caso de uso en el que los administradores (es decir, usuarios 
 > que necesitan permisos para configurar recursos de infraestructura AWS como usuarios IAM y roles) tienen más permisos 
@@ -118,22 +118,22 @@ Para generar una configuración inicial de tuberías para AWS CodePipeline, real
 
 ### Paso 1: Crear recursos de infraestructura
 
-Las **tuberías** que utilizan AWS SAM requieren ciertos **recursos de AWS**, como un usuario de IAM y roles con 
+Los pipelines que utilizan AWS SAM requieren ciertos recursos de AWS, como un usuario de IAM y roles con 
 los permisos necesarios, un depósito de Amazon S3 y opcionalmente un repositorio de Amazon ECR. Debes tener 
-un conjunto de **recursos de infraestructura** para cada etapa de implementación de la **tubería**.
+un conjunto de recursos de infraestructura para cada etapa de implementación del pipeline.
 
-Puedes ejecutar el siguiente comando para ayudar con esta configuración:
+Puedes ejecutar el siguiente comando para ayudar con la configuración:
 
 #### Crear la etapa dev del pipeline
 
 ```shell
-cd ~/environment/sam-app
+cd ~/sam-app
 sam pipeline bootstrap --stage dev
 ```
 
-A continuación se enumeran una lista de las preguntas y respuestas requeridas para este taller. Presta especial atención al seleccionar 
-OpenID Connect (OIDC) para el proveedor de permisos de usuario y GitHub Actions cuando se te pida seleccionar un proveedor OIDC. 
-**Ten en cuenta que los números pueden ser diferentes al elegir de una lista enumerada**. La salida completa y las respuestas se proporcionan a continuación 
+A continuación se enumeran una lista de las preguntas y respuestas requeridas para acabar con este taller. Presta especial atención al seleccionar 
+OpenID Connect (OIDC) para el proveedor de permisos de usuario y Bitbucket cuando se te pida seleccionar un proveedor OIDC. 
+**Hay que tener en cuenta que los números pueden ser diferentes al elegir de una lista enumerada**. La salida completa y las respuestas se proporcionan a continuación 
 como referencia adicional.
 
 1. Select a pipeline template to get started: `AWS Quick Start Pipeline Templates` (1)
@@ -168,32 +168,32 @@ The following resources were created in your account:
 ...
 ```
 
-Estos recursos fueron creados con una pila de CloudFormation que Pipelines SAM sintetizó y lanzó.
+Estos recursos fueron creados con un stack de CloudFormation que Pipelines SAM sintetizó y lanzó.
 Opcionalmente, puedes navegar hasta la consola de CloudFormation e inspeccionar esta pila para ver todo lo que se creó.
 
 En este paso, los flujos de trabajo de SAM crearon un proveedor de identidad IAM OIDC resaltado a continuación. 
 Los proveedores de identidad IAM OIDC son entidades en IAM que describen un servicio de proveedor de identidad 
 externo (IdP) que admite el estándar OpenID Connect (OIDC), como Google o Salesforce. Para nuestros propósitos, 
-el proveedor de identidad externo es GitHub. El proveedor de identidad IAM OIDC se utiliza para establecer confianza 
-entre su cuenta de AWS y GitHub. Esto permitirá que las acciones de GitHub asuman un rol IAM de AWS para la 
+el proveedor de identidad externo es Bitbucket. El proveedor de identidad IAM OIDC se utiliza para establecer confianza 
+entre su cuenta de AWS y Bitbucket. Esto permitirá que las acciones de Bitbucket asuman un rol IAM de AWS para la 
 actividad de implementación.
 
 ![image_4.2.3.png](image_4.2.3.png)
 
 #### Crear la etapa prod del pipeline
 
-Ahora que has creado los recursos necesarios para la etapa de construcción de desarrollo, necesitas seguir los 
+Ahora que hemos creado los recursos necesarios para la etapa de construcción de desarrollo, necesitas seguir los 
 mismos pasos para la etapa de producción.
 
 Ejecuta los siguientes comandos:
 
 ```shell
-cd ~/environment/sam-app
+cd ~/sam-app
 sam pipeline bootstrap --stage prod
 ```
 
-A continuación se enumeran la lista de **preguntas y respuestas** requeridas para este taller. 
-**Tenga en cuenta que los números pueden ser diferentes al elegir de una lista enumerada**. 
+A continuación se enumeran la lista de preguntas y respuestas requeridas para este taller. 
+**Hay que tener en cuenta que los números pueden ser diferentes al elegir de una lista enumerada**. 
 La salida completa y las respuestas se proporcionan a continuación como referencia adicional.
 
 1. [2] Account details. Select a credential source to associate with this stage: `default (named profile)` (2)
@@ -215,7 +215,9 @@ Para generar la configuración del pipeline, ejecuta el siguiente comando:
 sam pipeline init
 ```
 
-A continuación se enumera una lista de las preguntas y respuestas requeridas para este taller. Tenga en cuenta que los números pueden ser diferentes al elegir de una lista enumerada. La salida completa y las respuestas se proporcionan a continuación como una referencia adicional.
+A continuación se enumera una lista de las preguntas y respuestas requeridas para este taller. Ten en cuenta que 
+los números pueden ser diferentes al elegir de una lista enumerada. La salida completa y las respuestas se proporcionan 
+a continuación como una referencia adicional.
 
 1. Select a pipeline template to get started: AWS Quick Start Pipeline Templates (1)
 2. Select CI/CD system: AWS CodePipeline (3)
@@ -312,38 +314,37 @@ Your project should have the structure below (only the most relevant files and f
 
 ```
 
-Puedes abrir opcionalmente `codepipeline.yaml` y otros archivos para ver lo que las Canalizaciones SAM crearon 
+Puedes abrir opcionalmente `codepipeline.yaml` y otros archivos para ver lo que los pipelines SAM crearon 
 para nosotros. Al mirar `codepipeline.yaml`, puedes ver que hay casi 1000 líneas de flujo de trabajo de 
-Clowdformation que SAM creó. ¡Piensa en cuánto tiempo acabas de ahorrar usando las Canalizaciones 
+ClowdFormation que SAM creó. ¡Piensa en cuánto tiempo acabas de ahorrar usando los pipelines 
 SAM en lugar de hacer esto a mano!
 
 ### Paso 3: Conecta el repositorio Bitbucket con tu sistema de CI/CD
 
-Para **AWS CodePipeline** ahora puedes crear la conexión ejecutando el siguiente comando:
+Para AWS CodePipeline ahora puedes crear la conexión ejecutando el siguiente comando:
 
 ```shell
 sam deploy -t codepipeline.yaml --stack-name <pipeline-stack-name> --capabilities=CAPABILITY_IAM --region <region-X>
 ```
 
-> **Nota**
-> `<pipeline-stack-name>` - es el nombre de tu canalización, no el nombre de tu etapa de implementación. Por lo tanto, 
-> como de costumbre necesitas > para crear **solo un pipeline**. Este pipeline contendrá dos etapas de 
+> **Nota**  
+> `<pipeline-stack-name>` - es un nombre de tu pipeline, no es un nombre de tu _stage_ de implementación. Por lo tanto, 
+> como norma general necesitas crear **solo un pipeline**. Este pipeline contendrá dos etapas de 
 > despliegue: prod y dev.
 
-Después de ejecutar el comando `sam deploy` previamente, completa la conexión siguiendo los pasos indicados en Para 
-completar una conexión en el tema [Actualizar una conexión pendiente](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-update.html) 
-de la Guía del usuario de la consola de herramientas de desarrollo. Además, guarde una copia del `CodeStarConnectionArn` 
+Después de ejecutar el comando `sam deploy` previamente, completa la conexión siguiendo los pasos indicados el artículo [Actualizar una conexión pendiente](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-update.html) 
+de la _Guía del usuario_ de la consola de herramientas de desarrollo. Además, guarda una copia del `CodeStarConnectionArn` 
 de la salida del comando porque la necesitarás si quieres usar AWS CodePipeline con otra rama que no sea `main`.
 
-### Paso 4: Haz commit y push de la configuración del Pipeline en el repositorio de Git
+### Paso 4: Haz commit y push de la configuración del Pipeline en el repositorio Git
 
-Este paso es necesario para asegurar que su sistema CI/CD esté al tanto de la configuración de su canalización, y se 
+Este paso es necesario para asegurar que el sistema CI/CD esté al tanto de la configuración del pipeline, y se 
 ejecutará cuando se realicen cambios.
 
 ### Configura otras ramas
 
 Por defecto, AWS CodePipeline utiliza la rama principal con AWS SAM. Si deseas utilizar una rama distinta a principal, 
-debes ejecutar nuevamente el comando `sam deploy`. Ten en cuenta que, dependiendo del repositorio Git que estés 
+debes ejecutar nuevamente el comando `sam deploy`. Ten en cuenta que, dependiendo del repositorio Git que estás 
 utilizando, es posible que también necesites proporcionar el `CodeStarConnectionArn`:
 
 ```shell
@@ -351,26 +352,25 @@ utilizando, es posible que también necesites proporcionar el `CodeStarConnectio
 sam deploy -t codepipeline.yaml --stack-name <feature-pipeline-stack-name> --capabilities=CAPABILITY_IAM --parameter-overrides="FeatureGitBranch=<branch-name> CodeStarConnectionArn=<codestar-connection-arn>"
 ```
 
-Ahora que la *configuración* ha sido subida a tu repositorio de GitHub, **GitHub Actions** se hará cargo, creará 
-y ejecutará tu primer flujo de trabajo basado en el pipeline.yaml que has **confirmado**.
+Ahora que la configuración ha sido subida a tu repositorio de Butbucket, **AWS CodePipline** se hará cargo, creará 
+y ejecutará tu primer flujo de trabajo basado en el `pipeline.yaml` que has confirmado.
 
-## Automatice la implementación de su aplicación AWS SAM.
+## Automatiza la implementación de la aplicación AWS SAM
 
-Para configurar su canalización [AWS CodePipeline](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html) 
-para automatizar la creación e implementación de su aplicación AWS SAM, la plantilla de AWS CloudFormation y el archivo 
-`buildspec*.yml` deben contener líneas que hagan lo siguiente:
+Para configurar tu pipeline [AWS CodePipeline](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html), 
+la plantilla `codepipeline.yaml` de AWS CloudFormation y el archivos `buildspec*.yml` deben contener líneas que hagan lo siguiente:
 
-1. Hacer referencia a una imagen de contenedor de construcción con el tiempo de ejecución necesario de entre las 
+1. Hacer referencia a una imagen de contenedor de construcción con el runtime necesario de entre las 
 imágenes disponibles. 
-El siguiente ejemplo utiliza la imagen de contenedor de construcción `public.ecr.aws/sam/build-nodejs20.x`.
-2. Configura las etapas del *pipeline* para ejecutar los comandos necesarios de la interfaz de línea de comandos 
-(CLI) de AWS SAM.
+El siguiente ejemplo utiliza la imagen de contenedor de construcción `public.ecr.aws/sam/build-nodejs20.x`
+2. Configura las etapas del pipeline para ejecutar los comandos necesarios de la interfaz de línea de comandos 
+(CLI) de AWS SAM
 
-En el siguiente ejemplo se ejecutan dos comandos de AWS SAM CLI: `sam build` y `sam deploy` (**con las opciones necesarias**).
+En el siguiente ejemplo se ejecutan dos comandos de AWS SAM CLI: `sam build` y `sam deploy` (_con las opciones necesarias_).
 
-Este ejemplo supone que has declarado todas las funciones y capas en tu archivo de plantilla de AWS SAM con `runtime: nodejs12.x`.
+Este ejemplo supone que has declarado todas las funciones y capas en tu archivo de plantilla de AWS SAM con el `runtime: nodejs20.x`.
 
-**AWS CloudFormation template snippet de codepipeline.yaml:**
+**AWS CloudFormation template snippet de `codepipeline.yaml`:**
 
 ```yaml
   CodeBuildProject:
@@ -383,7 +383,7 @@ Este ejemplo supone que has declarado todas las funciones y capas en tu archivo 
       ...
 ```
 
-**buildspec*.yml snippet:**
+**`buildspec\*.yml` snippet:**
 
 ```shell
 version: 0.2
@@ -395,22 +395,21 @@ phases:
 ```
 
 Para obtener una lista de imágenes de contenedores de compilación de Amazon Elastic Container Registry (Amazon ECR) disponibles para diferentes tiempos de ejecución, 
-[consulte Repositorios de imágenes para AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-image-repositories.html).
+[consulta Repositorios de imágenes para AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-image-repositories.html).
 
 
-### Hacer las pruebas de la aplicación en entornos de desarrollo y producción.
+### Hacer las pruebas de la aplicación en entornos de desarrollo y producción
 
 Dirígete a la consola de CloudFormation. Después de que haya finalizado la ejecución de tu primer flujo de trabajo, 
-notarás dos nuevas pilas sam-dev y sam-prod. Estos son los nombres que proporcionaste durante el asistente de 
+notarás dos nuevas pilas `sam-dev` y `sam-prod`. Estos son los nombres que proporcionaste durante el asistente de 
 SAM Pipelines en el paso anterior.
 
 AWS Codepipeline creó el stack sam-dev durante el paso de despliegue de prueba del Pipeline. De manera similar, 
 AWS Codepipeline creó sam-prod durante el paso de despliegue de producción.
 
-Mira la pestaña Outputs de cada una de estas pilas de CloudFormation para ver los puntos finales de la API. 
-Puedes usar curl u otros métodos para verificar la funcionalidad de tus dos nuevas APIs. Puedes exportar los puntos 
-finales de URL para ambas etapas en una terminal.
-
+Mira la pestaña `Outputs` de cada una de estas pilas de CloudFormation para ver los puntos finales de la API. 
+Puedes usar `curl` u otros métodos para verificar la funcionalidad de tus dos nuevas APIs. Puedes exportar los puntos 
+finales de URL para ambas etapas en tu terminal.
 ```shell
 export DEV_ENDPOINT=$(aws cloudformation describe-stacks --stack-name sam-app-dev | jq -r '.Stacks[].Outputs[].OutputValue | select(startswith("https://"))')
 export PROD_ENDPOINT=$(aws cloudformation describe-stacks --stack-name sam-app-prod | jq -r '.Stacks[].Outputs[].OutputValue | select(startswith("https://"))')
@@ -424,16 +423,16 @@ curl -s $PROD_ENDPOINT
 
 ![image_4.2.7.png](image_4.2.7.png)
 
-Puede que hayas notado que las pruebas unitarias no se están ejecutando en tu canalización. ¡Arreglemos eso en la próxima sección!
+Puede que hayas notado que las pruebas unitarias no se están ejecutando en tu pipeline. ¡Arreglemos eso en la próxima sección!
 
 ## Habilitar pruebas unitarias
 
-Para habilitar pruebas unitarias en tu canalización hay dos pasos.
+Para habilitar pruebas unitarias en tu pipeline hay dos pasos:
 
-1. Editar `codepipeline.yaml` y agregar comandos a la etapa de construcción de pruebas.
-2. Realiza commit y push a estos cambios.
+1. Editar `codepipeline.yaml` y agregar comandos a la etapa de construcción de pruebas
+2. Realiza commit y push a estos cambios
 
-Abra el archivo `sam-app/codepipeline.yaml` en su editor. Busque la cadena `test`. Encontrará un comentario que indica 
+Abra el archivo `sam-app/codepipeline.yaml` en tu editor. Busque la cadena `test`. Encontrará un comentario que indica 
 dónde puede agregar comandos para ejecutar sus pruebas unitarias. Por favor, agregue los comandos que sean apropiados 
 para el tiempo de ejecución que ha elegido.
 
@@ -477,12 +476,12 @@ git commit -am 'Enable unit tests in pipeline'
 git push
 ```
 
-### Observa el Pipeline auto-actualizándose y ejecutando pruebas.
+### Observa el pipeline auto-actualizándose y ejecutando pruebas
 
-Abre tu Flujo de trabajo desde el panel de control de AWS CodePipeline. Si expandes el trabajo de prueba, entonces verás 
+Abre tu flujo de trabajo desde el panel de control de AWS CodePipeline. Si expandes el trabajo de prueba, entonces verás 
 la salida de tus nuevas pruebas unitarias. Recuerda que cualquier cambio que hagas en el `codepipeline.yaml` se aplicará 
 automáticamente una vez que lo hayas confirmado.
 
 ![image_unit-test.png](image_unit-test.png)
 
-¡Felicidades! ¡Has creado un pipeline de Integración Continua/Despliegue Continuo para una aplicación Serverless!
+¡Felicidades! ¡Has creado un pipeline de Integración Continua/Despliegue Continuo para una aplicación _serverless_!
