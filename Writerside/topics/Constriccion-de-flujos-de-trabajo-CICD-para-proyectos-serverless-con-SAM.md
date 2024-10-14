@@ -46,9 +46,9 @@ tu plantilla SAM. Sin embargo, ahora puedes usar un único comando, `sam deploy`
 y el SAM CLI creará y gestionará este bucket de S3 por ti. El siguiente diagrama es un ejemplo de la salida en 
 la terminal cuando se ejecuta el comando **`sam deploy`**. 
 
-![La salida en la terminal](la-salida-en-la-terminal.jpg)
+![image](la-salida-en-la-terminal.jpg)
 
-![Final de la salida en la terminal](final-de-la-salida-en-la-terminal.png)
+![image](final-de-la-salida-en-la-terminal.png)
 
 La orden **`sam deploy`** también incluye un modo interactivo guiado (**`sam deploy --guided`**).
 Este modo te guía a través de los parámetros necesarios para el despliegue, ofrece opciones predeterminadas y guarda tu

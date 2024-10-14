@@ -2,7 +2,7 @@
 
 Ahora que tienes una aplicación SAM. Aprenderás cómo ejecutarla y probarla localmente utilizando la CLI de AWS SAM. Esto es importante porque es parte del flujo de trabajo diario de desarrollo. Te ayuda a verificar si la aplicación se está comportando como se espera, depurar lo que está mal y solucionar cualquier problema antes de enviar tus cambios a un repositorio central.
 
-![image_3.4.1.png](image_3.4.1.png)
+![image](image_3.4.1.png)
 
 ### Instalar dependencias
 
@@ -60,7 +60,7 @@ Una vez que tu servidor local esté en ejecución, podemos enviar solicitudes HT
 
 Sin detener el proceso en ejecución, abre un nuevo terminal.
 
-![image3.4.2.png](image3.4.2.png)
+![image](image3.4.2.png)
 
 Prueba tu endpoint ejecutando un comando CURL que provoque una solicitud GET HTTP.
 

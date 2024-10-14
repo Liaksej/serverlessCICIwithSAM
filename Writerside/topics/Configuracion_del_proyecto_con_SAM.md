@@ -99,7 +99,7 @@ El proyecto debe estar inicializado ahora
 
 Deberías ver una nueva carpeta con el nombre del proyecto creada con un andamiaje básico de Hello World Example TypeScript.
 
-![exmpl-prj.png](exmpl-prj.png)
+![image](exmpl-prj.png)
 
 > **Nota**
 > Si estás interesado en aprender más sobre la inicialización de proyectos SAM, 

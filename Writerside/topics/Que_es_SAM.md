@@ -27,7 +27,7 @@ La directiva transform toma un template completo escrito en la sintaxis de AWS S
 en un template compatible de AWS CloudFormation. También puedes opcionalmente incluir cualquier recurso 
 en un template de SAM.
 
-![example-template.png](example-template.png)
+![image](example-template.png)
 
 ### Despliegue plantillas SAM con la SAM CLI
 

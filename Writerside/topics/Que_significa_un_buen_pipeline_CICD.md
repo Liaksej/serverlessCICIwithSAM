@@ -31,7 +31,7 @@ Para entender las estrategias de implementación, primero necesitas comprender e
 Al crear una función Lambda, solo existe una versión llamada `$LATEST`. Cada vez que publiques una versión, 
 Lambda toma una copia instantánea de `$LATEST` para crear la nueva versión. Esta copia no se puede modificar.
 
-![4C4dFG6_qEg9cO2I_NrnKtOK71kkkLSY7.gif](4C4dFG6_qEg9cO2I_NrnKtOK71kkkLSY7.gif)
+![image](4C4dFG6_qEg9cO2I_NrnKtOK71kkkLSY7.gif)
 
 #### Lambda aliases
 
@@ -39,7 +39,7 @@ Un alias de Lambda es un puntero a una versión específica de una función. Por
 sola versión de Lambda. Cuando se actualiza el alias para que apunte a una versión diferente de la función, 
 todo el tráfico de solicitudes entrantes se redirigirá hacia la versión actualizada de la función Lambda.
 
-![2U1qqxVxhgyt0nD0_KXE0-taAyoDoOTa1.gif](2U1qqxVxhgyt0nD0_KXE0-taAyoDoOTa1.gif)
+![image](2U1qqxVxhgyt0nD0_KXE0-taAyoDoOTa1.gif)
 
 ## Estrategias de despliegue
 
@@ -55,7 +55,7 @@ a la función de Lambda actualizada (nueva), todo al mismo tiempo. Las implement
 ser beneficiosas cuando la velocidad de tus implementaciones es importante. En esta estrategia, la nueva versión 
 de tu código se lanza rápidamente y todos tus usuarios pueden acceder a ella de inmediato.
 
-![XoHW_kQiATFSkaTP_Qq2k-YqtjYkHdDAI.gif](XoHW_kQiATFSkaTP_Qq2k-YqtjYkHdDAI.gif)
+![image](XoHW_kQiATFSkaTP_Qq2k-YqtjYkHdDAI.gif)
 
 #### Canary
 
@@ -63,7 +63,7 @@ En una implementación de canario, despliegas la nueva versión de tu código de
 porcentaje del tráfico de producción para que apunte a esa nueva versión. Después de validar que esta versión 
 es segura y no está causando errores, diriges todo el tráfico a la nueva versión de tu código.
 
-![IxwTO6k4B5VpRaf7_J7YZxn9DxihXXYLq.gif](IxwTO6k4B5VpRaf7_J7YZxn9DxihXXYLq.gif)
+![image](IxwTO6k4B5VpRaf7_J7YZxn9DxihXXYLq.gif)
 
 #### Linear
 
@@ -72,7 +72,7 @@ de tráfico a tu nueva versión del código al principio. Después de un períod
 incrementas automáticamente la cantidad de tráfico que envías a la nueva versión hasta que estés enviando 
 el 100 por ciento del tráfico de producción. 
 
-![h3yvwiEveK-7GGQt_XNEUddKdeu5tek0J.gif](h3yvwiEveK-7GGQt_XNEUddKdeu5tek0J.gif)
+![image](h3yvwiEveK-7GGQt_XNEUddKdeu5tek0J.gif)
 
 ### Comparando estrategias de implementación
 
@@ -94,7 +94,7 @@ central de controles de calidad.
 
 Aquí tienes un ejemplo de un pipeline de despliegue continuo:
 
-![image-cicd-flow.png](image-cicd-flow.png)
+![image](image-cicd-flow.png)
 
 Un pipeline de CI/CD está compuesto principalmente por cuatro pasos: 
 

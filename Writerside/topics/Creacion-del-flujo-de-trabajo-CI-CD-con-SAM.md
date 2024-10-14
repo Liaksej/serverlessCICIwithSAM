@@ -13,7 +13,7 @@ Actualmente, AWS SAM CLI admite generar configuraciones iniciales de pipeline CI
 * [GitHub Actions](https://github.com/features/actions) 
 * [Bitbucket Pipelines](https://support.atlassian.com/bitbucket-cloud/docs/get-started-with-bitbucket-pipelines/) 
 
-![image_4.1.png](image_4.1.png)
+![image](image_4.1.png)
 
 ### 4.1. Selección de herramientas para CI/CD (AWS CodePipeline, Github Actions y otros) 
 
@@ -98,7 +98,7 @@ AWS CodePipeline y que llevará a cabo los siguientes pasos.
 5. Prueba de integración
 6. Desplegar a un entorno de producción a través de AWS CodeDeploy
 
-![s3orphans-Pipeline.jpg](s3orphans-Pipeline.jpg)
+![image](s3orphans-Pipeline.jpg)
 
 ## Generar un pipeline inicial para AWS CodePipeline en AWS SAM
 
@@ -178,7 +178,7 @@ el proveedor de identidad externo es Bitbucket. El proveedor de identidad IAM OI
 entre su cuenta de AWS y Bitbucket. Esto permitirá que las acciones de Bitbucket asuman un rol IAM de AWS para la 
 actividad de implementación.
 
-![image_4.2.3.png](image_4.2.3.png)
+![image](image_4.2.3.png)
 
 #### Crear la etapa prod del pipeline
 
@@ -205,7 +205,7 @@ La salida completa y las respuestas se proporcionan a continuación como referen
 7. Press enter to confirm the values above ... : `return/enter`
 8. Should we proceed with the creation? [y/N]: `y`
 
-![image_4.2.4.png](image_4.2.4.png)
+![image](image_4.2.4.png)
 
 ### Paso 2: Generar la configuración del pipeline
 
@@ -421,7 +421,7 @@ curl -s $DEV_ENDPOINT
 curl -s $PROD_ENDPOINT
 ```
 
-![image_4.2.7.png](image_4.2.7.png)
+![image](image_4.2.7.png)
 
 Puede que hayas notado que las pruebas unitarias no se están ejecutando en tu pipeline. ¡Arreglemos eso en la próxima sección!
 
@@ -482,6 +482,6 @@ Abre tu flujo de trabajo desde el panel de control de AWS CodePipeline. Si expan
 la salida de tus nuevas pruebas unitarias. Recuerda que cualquier cambio que hagas en el `codepipeline.yaml` se aplicará 
 automáticamente una vez que lo hayas confirmado.
 
-![image_unit-test.png](image_unit-test.png)
+![image](image_unit-test.png)
 
 ¡Felicidades! ¡Has creado un pipeline de Integración Continua/Despliegue Continuo para una aplicación _serverless_!

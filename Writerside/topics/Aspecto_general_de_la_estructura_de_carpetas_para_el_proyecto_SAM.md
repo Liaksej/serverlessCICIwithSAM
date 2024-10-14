@@ -6,7 +6,7 @@ más básica** sin archivos adicionales relacionados con CI/CD, sobre los cuales
 
 Consideremos la estructura general, avanzando de arriba hacia abajo a través de las carpetas.
 
-![image_general_folder_review.png](image_general_folder_review.png)
+![image](image_general_folder_review.png)
 
 ### Carpeta `.aws-sam` 
 

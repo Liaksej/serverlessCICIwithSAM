@@ -3,7 +3,7 @@
 Antes de comenzar a construir un flujo de trabajo de integración y entrega continua (CI/CD) completamente automatizado, 
 vamos a aprender cómo construir, empaquetar y implementar una aplicación sin servidor utilizando AWS SAM CLI.
 
-![image_3.5.1.png](image_3.5.1.png)
+![image](image_3.5.1.png)
 
 Es importante aprender los fundamentos de cómo empaquetar e implementar una aplicación serverless aunque este taller 
 enseñe cómo automatizar implementaciones con un pipeline CI/CD. Aprender cómo realizar implementaciones manuales 
@@ -29,7 +29,7 @@ El segundo artefacto que SAM CLI genera durante la fase de empaquetado es la pla
 Que es una copia de la `template.yaml` de tu proyecto, excepto que hace referencia a la ubicación del archivo `.zip` 
 (primer artefacto) en el bucket de S3. La siguiente imagen muestra un ejemplo de una plantilla empaquetada.
 
-![image_3.5.2.png](image_3.5.2.png)
+![image](image_3.5.2.png)
 
 Fíjate en cómo el CodeUri hace referencia al archivo `.zip` en un bucket de S3, en lugar de en un directorio local. 
 De esta forma, AWS Lambda puede extraer tu código en el momento de la implementación.
@@ -73,14 +73,14 @@ Commands you can use next
 Cuando la compilación finaliza con éxito, verás un nuevo directorio creado en la raíz del proyecto llamado `.aws-sam`. 
 Es una carpeta oculta, así que si deseas verla en el IDE, **asegúrate de habilitar** `Mostrar archivos ocultos`.
 
-![image_3.5.3.png](image_3.5.3.png)
+![image](image_3.5.3.png)
 
 ### Explora la carpeta de construcción
 
 Tómete un momento para explorar el contenido de la carpeta de construcción. Nota que las pruebas unitarias están 
 automáticamente excluidas y las dependencias de terceros están incluidas. SAM se encarga de esto por nosotros.
 
-![image_3.5.4.png](image_3.5.4.png)
+![image](image_3.5.4.png)
 
 La carpeta de construcción incluye el archivo app.js como el punto de entrada para la aplicación Lambda, 
 el directorio `node_modules` con las dependencias, y el archivo `package.json` que declara las dependencias de la aplicación.
@@ -215,7 +215,7 @@ es bueno entender cómo crea recursos con CloudFormation.
 Navega a la [AWS CloudFormation console](https://console.aws.amazon.com/cloudformation/home), asegúrate de que estás en 
 la misma región en la que has estado trabajando hasta ahora. Deberías ver el nuevo stack sam-app en el estado `CREATE_COMPLETE`.
 
-![image_3.5.5.png](image_3.5.5.png)
+![image](image_3.5.5.png)
 
 ### Salidas de CloudFormation
 

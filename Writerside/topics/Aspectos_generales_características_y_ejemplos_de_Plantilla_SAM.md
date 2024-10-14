@@ -4,7 +4,7 @@ El Hello World Example TypeScript que acabas de inicializar crea una función La
 un recurso `/hello`. Cuando se llama con una solicitud GET de HTTP, la API Gateway invoca la función que asume un rol
 de ejecución IAM con permisos para interactuar con otros recursos de AWS, como por ejemplo una base de datos.
 
-![image_3-.png](image_3.2.1.png)
+![image](image_3.2.1.png)
 
 ### Explora la plantilla SAM
 
